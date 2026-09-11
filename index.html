@@ -526,13 +526,24 @@
             font-size: 11px;
             font-family: 'Inter', sans-serif;
             letter-spacing: 0.5px;
-            pointer-events: none;
             z-index: 5;
+        }
+
+        .credit a {
+            text-decoration: none;
+            transition: all 0.3s;
         }
 
         .credit span {
             color: #00d9ff;
             opacity: 0.6;
+            transition: all 0.3s;
+        }
+
+        .credit a:hover span {
+            opacity: 1;
+            text-decoration: underline;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
         }
 
         /* ====== Mobile ====== */
@@ -686,7 +697,7 @@
         </div>
     </div>
 
-    <div class="credit">Create by <span>Amirhossein Hosseinzadeh</span></div>
+    <div class="credit">Create by <a href="https://amirhosseinsefrvayek-glitch.github.io/Myresume/" target="_blank"><span>Amirhossein Hosseinzadeh</span></a></div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -778,7 +789,7 @@
             { id: 'fire', name: { fa: 'آتشین', en: 'Fire' }, color1: '#f87171', color2: '#991b1b', glow: 'rgba(248, 113, 113, 0.6)', eyeColor: '#ffffff' }
         ];
 
-        // ========== Stages (راحت‌تر شده) ==========
+        // ========== Stages ==========
         const STAGES = [
             {
                 id: 1, baseSpeed: 2.8, speedIncrease: 0.0015, spawnInterval: 140,
@@ -935,13 +946,8 @@
             }
         }
 
-        function confirmChar() {
-            // این با onclick داینامیک مدیریت می‌شه
-        }
-
-        function backFromChar() {
-            // این هم با onclick داینامیک مدیریت می‌شه
-        }
+        function confirmChar() {}
+        function backFromChar() {}
 
         function showStageSelect() {
             gameState = STATE.MENU;
@@ -1579,13 +1585,11 @@
             };
         }
 
-        // شروع: اگه زبان قبلاً انتخاب شده بود، مستقیم برو منو
         if (currentLang && T[currentLang]) {
             applyLanguage();
             hideAllOverlays();
             showMenu();
         } else {
-            // در غیر این صورت صفحه انتخاب زبان
             document.getElementById('langOverlay').classList.remove('hidden');
         }
 
