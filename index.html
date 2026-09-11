@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Gravity Flip | امیرحسین حسین‌زاده</title>
+    <title>Gravity Flip Pro | امیرحسین حسین‌زاده</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,7 +14,7 @@
         }
 
         body {
-            background: #0a0e14;
+            background: #05080d;
             color: #e6edf3;
             font-family: 'Vazirmatn', 'Tahoma', sans-serif;
             display: flex;
@@ -27,13 +28,12 @@
         .game-wrapper {
             position: relative;
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             height: 100vh;
-            max-height: 700px;
-            background: linear-gradient(180deg, #0d1b2a 0%, #1b263b 50%, #0d1b2a 100%);
+            max-height: 720px;
             overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 0 60px rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 0 80px rgba(0, 217, 255, 0.15);
         }
 
         #gameCanvas {
@@ -43,113 +43,120 @@
             cursor: pointer;
         }
 
-        /* HUD */
+        /* ====== HUD ====== */
         .hud {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
+            top: 16px;
+            left: 16px;
+            right: 16px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             pointer-events: none;
             z-index: 10;
+            gap: 10px;
         }
 
-        .score-box {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 217, 255, 0.3);
+        .hud-box {
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            padding: 10px 20px;
+            padding: 8px 16px;
+            min-width: 80px;
+            text-align: center;
         }
 
-        .score-label {
-            font-size: 11px;
+        .hud-label {
+            font-size: 10px;
             color: #8b949e;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
+            margin-bottom: 2px;
         }
 
-        .score-value {
-            font-size: 28px;
+        .hud-value {
+            font-size: 22px;
             font-weight: 800;
+            line-height: 1.1;
             background: linear-gradient(135deg, #00d9ff, #7c3aed);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.1;
         }
 
-        .best-box {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(124, 58, 237, 0.3);
-            border-radius: 12px;
-            padding: 8px 16px;
-            text-align: left;
+        .hud-stage {
+            flex: 1;
+            max-width: 200px;
         }
 
-        .best-box .score-label {
-            color: #7c3aed;
+        .stage-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 6px;
         }
 
-        .best-box .score-value {
-            font-size: 18px;
-            background: linear-gradient(135deg, #7c3aed, #00d9ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .stage-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00d9ff, #7c3aed);
+            border-radius: 2px;
+            transition: width 0.3s ease;
         }
 
-        /* Overlay */
+        /* ====== Overlays ====== */
         .overlay {
             position: absolute;
             inset: 0;
-            background: rgba(10, 14, 20, 0.92);
-            backdrop-filter: blur(15px);
+            background: rgba(5, 8, 13, 0.96);
+            backdrop-filter: blur(20px);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 30px;
+            padding: 30px 20px;
             z-index: 100;
             transition: opacity 0.4s ease;
+            overflow-y: auto;
         }
 
         .overlay.hidden {
             opacity: 0;
             pointer-events: none;
+            display: none;
         }
 
         .overlay-icon {
-            font-size: 70px;
-            margin-bottom: 20px;
+            font-size: 64px;
+            margin-bottom: 12px;
             animation: bounce 2s infinite ease-in-out;
         }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-12px); }
         }
 
         .overlay-title {
-            font-size: 38px;
-            font-weight: 800;
-            margin-bottom: 15px;
+            font-size: 40px;
+            font-weight: 900;
+            margin-bottom: 10px;
             background: linear-gradient(135deg, #00d9ff, #7c3aed);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.5px;
+            letter-spacing: -1px;
         }
 
         .overlay-subtitle {
-            font-size: 16px;
+            font-size: 15px;
             color: #8b949e;
-            margin-bottom: 35px;
-            max-width: 400px;
+            margin-bottom: 25px;
+            max-width: 500px;
             line-height: 1.8;
         }
 
@@ -157,62 +164,192 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(0, 217, 255, 0.1);
-            border: 1px solid rgba(0, 217, 255, 0.3);
+            background: rgba(0, 217, 255, 0.08);
+            border: 1px solid rgba(0, 217, 255, 0.25);
             border-radius: 12px;
-            padding: 12px 24px;
-            margin-bottom: 25px;
-            font-size: 14px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            font-size: 13px;
             color: #00d9ff;
         }
 
         .overlay-hint .key {
             background: #00d9ff;
-            color: #0a0e14;
-            padding: 4px 12px;
+            color: #05080d;
+            padding: 3px 10px;
             border-radius: 6px;
             font-weight: 800;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .play-btn {
-            padding: 18px 50px;
+            padding: 16px 45px;
             background: linear-gradient(135deg, #00d9ff, #7c3aed);
             color: white;
             border: none;
             border-radius: 14px;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 800;
             cursor: pointer;
             font-family: inherit;
             transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.25);
             letter-spacing: 0.5px;
+            margin: 6px;
         }
 
         .play-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.5);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.45);
         }
 
         .play-btn:active {
-            transform: translateY(-1px) scale(1.02);
+            transform: translateY(-1px) scale(1.01);
         }
 
-        /* Final Score */
+        .play-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .play-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        /* ====== انتخاب شخصیت ====== */
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .char-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 14px 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .char-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .char-card.selected {
+            border-color: var(--char-color);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 25px var(--char-glow);
+        }
+
+        .char-preview {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            margin: 0 auto 8px;
+            background: var(--char-grad);
+            position: relative;
+            box-shadow: 0 0 15px var(--char-glow);
+        }
+
+        .char-preview::before {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 4px;
+        }
+
+        .char-name {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--char-color);
+        }
+
+        /* ====== انتخاب مرحله ====== */
+        .stages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .stage-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 16px 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .stage-card.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .stage-card:not(.locked):hover {
+            transform: translateY(-4px);
+            border-color: #00d9ff;
+        }
+
+        .stage-card.completed {
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .stage-number {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d9ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .stage-name {
+            font-size: 11px;
+            color: #8b949e;
+            margin-top: 6px;
+        }
+
+        .stage-lock {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            font-size: 14px;
+        }
+
+        .stage-check {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 14px;
+            color: #10b981;
+        }
+
+        /* ====== آمار نهایی ====== */
         .final-stats {
             display: flex;
             gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .final-stat {
-            text-align: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .final-stat-value {
-            font-size: 42px;
-            font-weight: 800;
+            font-size: 38px;
+            font-weight: 900;
             background: linear-gradient(135deg, #00d9ff, #7c3aed);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -224,18 +361,18 @@
             font-size: 12px;
             color: #8b949e;
             letter-spacing: 1px;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .new-record {
             display: inline-block;
             background: linear-gradient(135deg, #ffd700, #ff8c00);
-            color: #0a0e14;
+            color: #05080d;
             padding: 6px 18px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             animation: pulse 1.5s infinite;
         }
 
@@ -244,41 +381,105 @@
             50% { transform: scale(1.08); }
         }
 
-        /* Mobile touch hint */
-        .touch-hint {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #8b949e;
-            font-size: 12px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 6px 16px;
-            border-radius: 20px;
-            pointer-events: none;
-            opacity: 0.6;
+        /* ====== Button row ====== */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
         }
 
+        /* ====== Stage transition ====== */
+        .stage-transition {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 8, 13, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .stage-transition.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .stage-transition-number {
+            font-size: 100px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d9ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            animation: zoomIn 0.6s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.3); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .stage-transition-name {
+            font-size: 22px;
+            color: #e6edf3;
+            font-weight: 700;
+            margin-top: 10px;
+            animation: slideUp 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ====== Power-up indicator ====== */
+        .powerup-bar {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .powerup-icon {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid #00d9ff;
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-size: 20px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+            animation: pulseGlow 1s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 217, 255, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(0, 217, 255, 0.9); }
+        }
+
+        /* ====== Mobile ====== */
         @media (max-width: 600px) {
-            .overlay-title {
-                font-size: 28px;
-            }
-            .overlay-icon {
-                font-size: 55px;
-            }
-            .overlay-subtitle {
-                font-size: 14px;
-            }
-            .score-value {
-                font-size: 22px;
-            }
-            .play-btn {
-                padding: 15px 40px;
-                font-size: 16px;
-            }
-            .final-stat-value {
-                font-size: 32px;
-            }
+            .overlay-title { font-size: 28px; }
+            .overlay-icon { font-size: 50px; }
+            .overlay-subtitle { font-size: 13px; }
+            .hud-value { font-size: 18px; }
+            .hud-box { padding: 6px 10px; min-width: 60px; }
+            .hud-label { font-size: 9px; }
+            .char-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .stage-transition-number { font-size: 70px; }
+            .final-stat-value { font-size: 28px; }
+            .play-btn { padding: 13px 30px; font-size: 15px; }
+            .char-preview { width: 36px; height: 36px; }
         }
     </style>
 </head>
@@ -287,58 +488,121 @@
     <div class="game-wrapper">
         <canvas id="gameCanvas"></canvas>
 
+        <!-- HUD -->
         <div class="hud">
-            <div class="score-box">
-                <div class="score-label">امتیاز</div>
-                <div class="score-value" id="scoreDisplay">0</div>
+            <div class="hud-box">
+                <div class="hud-label">امتیاز</div>
+                <div class="hud-value" id="scoreDisplay">0</div>
             </div>
-            <div class="best-box">
-                <div class="score-label">رکورد</div>
-                <div class="score-value" id="bestDisplay">0</div>
+            <div class="hud-box hud-stage">
+                <div class="hud-label">مرحله <span id="stageHudName">—</span></div>
+                <div class="stage-progress"><div class="stage-progress-fill" id="stageProgress"></div></div>
+            </div>
+            <div class="hud-box">
+                <div class="hud-label">رکورد</div>
+                <div class="hud-value" id="bestDisplay">0</div>
             </div>
         </div>
 
-        <!-- Overlay شروع -->
-        <div class="overlay" id="startOverlay">
+        <!-- Power-up -->
+        <div class="powerup-bar" id="powerupBar"></div>
+
+        <!-- Stage Transition -->
+        <div class="stage-transition" id="stageTransition">
+            <div class="stage-transition-number" id="transitionNum">1</div>
+            <div class="stage-transition-name" id="transitionName">شروع</div>
+        </div>
+
+        <!-- ============ منوی اصلی ============ -->
+        <div class="overlay" id="menuOverlay">
             <div class="overlay-icon">🎮</div>
-            <h1 class="overlay-title">Gravity Flip</h1>
+            <h1 class="overlay-title">Gravity Flip Pro</h1>
             <p class="overlay-subtitle">
-                با هر کلیک، جاذبه برعکس می‌شه!<br>
-                از موانع رد شو و رکورد بزن.
+                با هر کلیک جاذبه برعکس می‌شه!<br>
+                از موانع رد شو، ۶ مرحله رو فتح کن و رکورد بزن.
             </p>
-            <div class="overlay-hint">
-                <span class="key">Space</span>
-                <span>یا کلیک / لمس کن</span>
-            </div>
-            <button class="play-btn" onclick="startGame()">▶ شروع بازی</button>
+            <button class="play-btn" onclick="showCharacterSelect()">▶ شروع بازی</button>
         </div>
 
-        <!-- Overlay پایان -->
+        <!-- ============ انتخاب شخصیت ============ -->
+        <div class="overlay hidden" id="charOverlay">
+            <div class="overlay-icon">🎭</div>
+            <h1 class="overlay-title">شخصیتت رو انتخاب کن</h1>
+            <p class="overlay-subtitle">هر کدوم یه ظاهر متفاوت داره</p>
+
+            <div class="char-grid" id="charGrid"></div>
+
+            <div class="btn-row">
+                <button class="play-btn secondary" onclick="showMenu()">← بازگشت</button>
+                <button class="play-btn" onclick="showStageSelect()">ادامه →</button>
+            </div>
+        </div>
+
+        <!-- ============ انتخاب مرحله ============ -->
+        <div class="overlay hidden" id="stageOverlay">
+            <div class="overlay-icon">🗺️</div>
+            <h1 class="overlay-title">مرحله رو انتخاب کن</h1>
+            <p class="overlay-subtitle">هرچی جلوتر بری، سخت‌تر می‌شه</p>
+
+            <div class="stages-grid" id="stagesGrid"></div>
+
+            <div class="btn-row">
+                <button class="play-btn secondary" onclick="showCharacterSelect()">← بازگشت</button>
+            </div>
+        </div>
+
+        <!-- ============ پایان بازی ============ -->
         <div class="overlay hidden" id="gameOverOverlay">
             <div class="overlay-icon">💥</div>
             <h1 class="overlay-title">Game Over</h1>
             <div id="recordBadge"></div>
             <div class="final-stats">
-                <div class="final-stat">
+                <div>
                     <div class="final-stat-value" id="finalScore">0</div>
                     <div class="final-stat-label">امتیاز</div>
                 </div>
-                <div class="final-stat">
+                <div>
+                    <div class="final-stat-value" id="finalStage">1</div>
+                    <div class="final-stat-label">مرحله</div>
+                </div>
+                <div>
                     <div class="final-stat-value" id="finalBest">0</div>
                     <div class="final-stat-label">رکورد</div>
                 </div>
             </div>
-            <button class="play-btn" onclick="startGame()">🔄 دوباره بازی کن</button>
+            <div class="btn-row">
+                <button class="play-btn" onclick="restartStage()">🔄 دوباره همین مرحله</button>
+                <button class="play-btn secondary" onclick="showStageSelect()">🗺️ انتخاب مرحله</button>
+            </div>
         </div>
 
-        <div class="touch-hint">👆 برای پرش روی صفحه کلیک کن</div>
+        <!-- ============ پیروزی ============ -->
+        <div class="overlay hidden" id="winOverlay">
+            <div class="overlay-icon">🏆</div>
+            <h1 class="overlay-title">پیروزی!</h1>
+            <p class="overlay-subtitle">همه ۶ مرحله رو فتح کردی! تو یه افسانه‌ای 🎉</p>
+            <div class="final-stats">
+                <div>
+                    <div class="final-stat-value" id="winScore">0</div>
+                    <div class="final-stat-label">امتیاز کل</div>
+                </div>
+                <div>
+                    <div class="final-stat-value">۶/۶</div>
+                    <div class="final-stat-label">مراحل</div>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="play-btn" onclick="showMenu()">🏠 منوی اصلی</button>
+                <button class="play-btn secondary" onclick="resetProgress()">🔄 ریست پیشرفت</button>
+            </div>
+        </div>
     </div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // اندازه Canvas
+        // ========== اندازه ==========
         let W, H;
         function resizeCanvas() {
             const rect = canvas.getBoundingClientRect();
@@ -351,112 +615,316 @@
         }
         window.addEventListener('resize', resizeCanvas);
 
-        // ====== حالت بازی ======
-        const STATE = {
-            MENU: 'menu',
-            PLAYING: 'playing',
-            GAMEOVER: 'gameover'
-        };
+        // ========== شخصیت‌ها ==========
+        const CHARACTERS = [
+            {
+                id: 'neon',
+                name: 'نئون',
+                color1: '#00d9ff',
+                color2: '#7c3aed',
+                glow: 'rgba(0, 217, 255, 0.6)',
+                eyeColor: '#ffffff'
+            },
+            {
+                id: 'purple',
+                name: 'بنفش',
+                color1: '#c084fc',
+                color2: '#6d28d9',
+                glow: 'rgba(192, 132, 252, 0.6)',
+                eyeColor: '#ffffff'
+            },
+            {
+                id: 'matrix',
+                name: 'ماتریکس',
+                color1: '#4ade80',
+                color2: '#166534',
+                glow: 'rgba(74, 222, 128, 0.6)',
+                eyeColor: '#0a0a0a'
+            },
+            {
+                id: 'gold',
+                name: 'طلایی',
+                color1: '#fbbf24',
+                color2: '#b45309',
+                glow: 'rgba(251, 191, 36, 0.6)',
+                eyeColor: '#0a0a0a'
+            },
+            {
+                id: 'fire',
+                name: 'آتشین',
+                color1: '#f87171',
+                color2: '#991b1b',
+                glow: 'rgba(248, 113, 113, 0.6)',
+                eyeColor: '#ffffff'
+            }
+        ];
 
+        // ========== مراحل ==========
+        const STAGES = [
+            {
+                id: 1,
+                name: 'شروع',
+                baseSpeed: 3.5,
+                speedIncrease: 0.003,
+                spawnInterval: 100,
+                obstacleTypes: ['simple'],
+                bgTop: '#0d1b2a',
+                bgBottom: '#1b263b',
+                goal: 600,
+                powerups: false
+            },
+            {
+                id: 2,
+                name: 'شتاب',
+                baseSpeed: 4.2,
+                speedIncrease: 0.004,
+                spawnInterval: 85,
+                obstacleTypes: ['simple', 'tall'],
+                bgTop: '#1a1423',
+                bgBottom: '#2d1b3d',
+                goal: 800,
+                powerups: false
+            },
+            {
+                id: 3,
+                name: 'موانع متحرک',
+                baseSpeed: 4.8,
+                speedIncrease: 0.005,
+                spawnInterval: 80,
+                obstacleTypes: ['simple', 'tall', 'moving'],
+                bgTop: '#14201f',
+                bgBottom: '#1f3535',
+                goal: 1000,
+                powerups: true
+            },
+            {
+                id: 4,
+                name: 'دوگانه',
+                baseSpeed: 5.3,
+                speedIncrease: 0.006,
+                spawnInterval: 75,
+                obstacleTypes: ['simple', 'tall', 'moving', 'double'],
+                bgTop: '#201610',
+                bgBottom: '#3d2416',
+                goal: 1200,
+                powerups: true
+            },
+            {
+                id: 5,
+                name: 'چرخان',
+                baseSpeed: 5.8,
+                speedIncrease: 0.007,
+                spawnInterval: 70,
+                obstacleTypes: ['simple', 'tall', 'moving', 'double', 'spinning'],
+                bgTop: '#200a1a',
+                bgBottom: '#3d1229',
+                goal: 1500,
+                powerups: true
+            },
+            {
+                id: 6,
+                name: 'جهنمی 🔥',
+                baseSpeed: 6.5,
+                speedIncrease: 0.009,
+                spawnInterval: 60,
+                obstacleTypes: ['simple', 'tall', 'moving', 'double', 'spinning'],
+                bgTop: '#3d0000',
+                bgBottom: '#7f1d1d',
+                goal: 2000,
+                powerups: true
+            }
+        ];
+
+        // ========== State ==========
+        const STATE = { MENU: 'menu', PLAYING: 'playing', GAMEOVER: 'gameover', WIN: 'win' };
         let gameState = STATE.MENU;
 
-        // ====== بازیکن ======
+        let selectedCharIndex = parseInt(localStorage.getItem('gfChar') || '0');
+        let unlockedStages = parseInt(localStorage.getItem('gfUnlocked') || '1');
+        let bestScore = parseInt(localStorage.getItem('gfBest') || '0');
+
+        let currentStageIndex = 0;
+        let totalScore = 0;
+
+        // ========== Player ==========
         const player = {
             x: 100,
             y: 0,
             size: 40,
             vy: 0,
-            gravity: 0.6,
-            jumpForce: -11,
-            isGravityUp: false, // آیا جاذبه برعکسه؟
+            gravity: 0.65,
+            jumpForce: -11.5,
+            isGravityUp: false,
             rotation: 0,
-            targetRotation: 0
+            targetRotation: 0,
+            trail: []
         };
 
-        // ====== موانع ======
+        // ========== Game vars ==========
         let obstacles = [];
+        let particles = [];
+        let powerups = [];
+        let activePowerup = null; // { type, until }
+        let powerupTimer = 0;
         let obstacleSpawnTimer = 0;
-        let obstacleSpawnInterval = 90; // هر چند فریم یه مانع جدید
-
-        // ====== امتیاز و سرعت ======
         let score = 0;
-        let bestScore = parseInt(localStorage.getItem('gravityFlipBest') || '0');
+        let stageScore = 0;
         let gameSpeed = 4;
-        let speedIncreaseTimer = 0;
+        let speedTimer = 0;
         let frameCount = 0;
 
-        // ====== ذرات ======
-        let particles = [];
-
-        // ====== تنظیمات ======
         const GROUND_HEIGHT = 40;
 
-        // ====== شروع بازی ======
-        function startGame() {
-            gameState = STATE.PLAYING;
-            score = 0;
-            gameSpeed = 4;
-            frameCount = 0;
-            obstacleSpawnTimer = 0;
+        // ========== Helpers ==========
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+        function choose(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        // ========== Menu Management ==========
+        function showMenu() {
+            gameState = STATE.MENU;
+            hideAllOverlays();
+            document.getElementById('menuOverlay').classList.remove('hidden');
+        }
+
+        function showCharacterSelect() {
+            gameState = STATE.MENU;
+            hideAllOverlays();
+            buildCharGrid();
+            document.getElementById('charOverlay').classList.remove('hidden');
+        }
+
+        function showStageSelect() {
+            gameState = STATE.MENU;
+            hideAllOverlays();
+            buildStageGrid();
+            document.getElementById('stageOverlay').classList.remove('hidden');
+        }
+
+        function hideAllOverlays() {
+            document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
+        }
+
+        function buildCharGrid() {
+            const grid = document.getElementById('charGrid');
+            grid.innerHTML = '';
+            CHARACTERS.forEach((c, i) => {
+                const card = document.createElement('div');
+                card.className = 'char-card' + (i === selectedCharIndex ? ' selected' : '');
+                card.style.setProperty('--char-color', c.color1);
+                card.style.setProperty('--char-glow', c.glow);
+                card.style.setProperty('--char-grad', `linear-gradient(135deg, ${c.color1}, ${c.color2})`);
+                card.innerHTML = `
+                    <div class="char-preview"></div>
+                    <div class="char-name">${c.name}</div>
+                `;
+                card.onclick = () => {
+                    selectedCharIndex = i;
+                    localStorage.setItem('gfChar', i);
+                    buildCharGrid();
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        function buildStageGrid() {
+            const grid = document.getElementById('stagesGrid');
+            grid.innerHTML = '';
+            STAGES.forEach((s, i) => {
+                const isLocked = s.id > unlockedStages;
+                const isCompleted = s.id < unlockedStages;
+                const card = document.createElement('div');
+                card.className = 'stage-card' + (isLocked ? ' locked' : '') + (isCompleted ? ' completed' : '');
+                card.innerHTML = `
+                    ${isLocked ? '<div class="stage-lock">🔒</div>' : ''}
+                    ${isCompleted ? '<div class="stage-check">✓</div>' : ''}
+                    <div class="stage-number">${s.id}</div>
+                    <div class="stage-name">${s.name}</div>
+                `;
+                if (!isLocked) {
+                    card.onclick = () => startStage(i);
+                }
+                grid.appendChild(card);
+            });
+        }
+
+        function resetProgress() {
+            if (!confirm('مطمئنی می‌خوای همه پیشرفتت رو ریست کنی؟')) return;
+            unlockedStages = 1;
+            bestScore = 0;
+            localStorage.setItem('gfUnlocked', 1);
+            localStorage.setItem('gfBest', 0);
+            document.getElementById('bestDisplay').textContent = '0';
+            showMenu();
+        }
+
+        // ========== Start Stage ==========
+        function startStage(stageIndex) {
+            currentStageIndex = stageIndex;
+            const stage = STAGES[stageIndex];
+
+            hideAllOverlays();
+            showStageTransition(stage);
+        }
+
+        function showStageTransition(stage) {
+            const trans = document.getElementById('stageTransition');
+            document.getElementById('transitionNum').textContent = stage.id;
+            document.getElementById('transitionName').textContent = stage.name;
+            trans.classList.add('active');
+
+            setTimeout(() => {
+                trans.classList.remove('active');
+                initStage(stage);
+                setTimeout(() => { gameState = STATE.PLAYING; }, 100);
+            }, 1500);
+        }
+
+        function initStage(stage) {
+            // ریست
             obstacles = [];
             particles = [];
+            powerups = [];
+            activePowerup = null;
+            powerupTimer = 0;
+            obstacleSpawnTimer = 0;
+            score = 0;
+            stageScore = 0;
+            frameCount = 0;
+            speedTimer = 0;
+            gameSpeed = stage.baseSpeed;
+
             player.y = H / 2;
             player.vy = 0;
             player.isGravityUp = false;
             player.rotation = 0;
             player.targetRotation = 0;
+            player.trail = [];
 
-            document.getElementById('startOverlay').classList.add('hidden');
-            document.getElementById('gameOverOverlay').classList.add('hidden');
             document.getElementById('scoreDisplay').textContent = '0';
             document.getElementById('bestDisplay').textContent = bestScore;
+            document.getElementById('stageHudName').textContent = stage.id;
+            document.getElementById('stageProgress').style.width = '0%';
+            document.getElementById('powerupBar').innerHTML = '';
         }
 
-        // ====== پایان بازی ======
-        function gameOver() {
-            gameState = STATE.GAMEOVER;
-            
-            let isNewRecord = false;
-            if (score > bestScore) {
-                bestScore = score;
-                localStorage.setItem('gravityFlipBest', bestScore);
-                isNewRecord = true;
-            }
-
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('finalBest').textContent = bestScore;
-            
-            const badge = document.getElementById('recordBadge');
-            if (isNewRecord) {
-                badge.innerHTML = '<div class="new-record">🏆 رکورد جدید!</div>';
-            } else {
-                badge.innerHTML = '';
-            }
-
-            document.getElementById('gameOverOverlay').classList.remove('hidden');
+        function restartStage() {
+            startStage(currentStageIndex);
         }
 
-        // ====== پرش (برعکس کردن جاذبه) ======
+        // ========== Flip ==========
         function flip() {
             if (gameState !== STATE.PLAYING) return;
-            
             player.isGravityUp = !player.isGravityUp;
             player.vy = player.isGravityUp ? -player.jumpForce : player.jumpForce;
-            player.targetRotation += Math.PI; // چرخش ۱۸۰ درجه
-
-            // ذرات
-            createParticles(player.x + player.size / 2, player.y + player.size / 2, '#00d9ff', 8);
+            player.targetRotation += Math.PI;
+            createParticles(player.x + player.size / 2, player.y + player.size / 2, CHARACTERS[selectedCharIndex].color1, 8, 4);
         }
 
-        // ====== ورودی‌ها ======
+        // ========== Input ==========
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
                 e.preventDefault();
-                if (gameState === STATE.MENU || gameState === STATE.GAMEOVER) {
-                    startGame();
-                } else {
-                    flip();
-                }
+                if (gameState === STATE.PLAYING) flip();
             }
         });
 
@@ -469,148 +937,293 @@
             if (gameState === STATE.PLAYING) flip();
         }, { passive: false });
 
-        // ====== ذرات ======
-        function createParticles(x, y, color, count) {
+        // ========== Particles ==========
+        function createParticles(x, y, color, count, sizeMin = 3) {
             for (let i = 0; i < count; i++) {
                 particles.push({
-                    x: x,
-                    y: y,
-                    vx: (Math.random() - 0.5) * 8,
-                    vy: (Math.random() - 0.5) * 8,
+                    x, y,
+                    vx: rand(-8, 8),
+                    vy: rand(-8, 8),
                     life: 1,
-                    color: color,
-                    size: Math.random() * 4 + 2
+                    color,
+                    size: rand(sizeMin, sizeMin + 4)
                 });
             }
         }
 
-        // ====== ساخت مانع ======
+        // ========== Spawn Obstacle ==========
         function spawnObstacle() {
-            const minHeight = 60;
-            const maxHeight = H - GROUND_HEIGHT * 2 - 120;
-            const height = Math.random() * (maxHeight - minHeight) + minHeight;
-            
-            // به صورت تصادفی از کف یا از سقف
-            const fromTop = Math.random() > 0.5;
-            
-            const obstacle = {
+            const stage = STAGES[currentStageIndex];
+            const type = choose(stage.obstacleTypes);
+
+            let obs = {
                 x: W + 20,
                 width: 30,
-                height: height,
-                y: fromTop ? 0 : H - GROUND_HEIGHT - height,
+                height: 60,
+                y: 0,
                 passed: false,
-                color: Math.random() > 0.5 ? '#7c3aed' : '#ef4444'
+                type: type,
+                color: '#7c3aed',
+                baseY: 0,
+                phase: Math.random() * Math.PI * 2,
+                moveAmp: 0,
+                moveSpeed: 0
             };
-            
-            obstacles.push(obstacle);
+
+            const usableHeight = H - GROUND_HEIGHT * 2;
+
+            if (type === 'simple') {
+                obs.height = rand(usableHeight * 0.25, usableHeight * 0.5);
+                obs.y = Math.random() > 0.5 ? 0 : H - GROUND_HEIGHT - obs.height;
+                obs.color = '#7c3aed';
+            } else if (type === 'tall') {
+                obs.height = rand(usableHeight * 0.5, usableHeight * 0.7);
+                obs.y = Math.random() > 0.5 ? 0 : H - GROUND_HEIGHT - obs.height;
+                obs.width = 25;
+                obs.color = '#00d9ff';
+            } else if (type === 'moving') {
+                obs.height = rand(usableHeight * 0.2, usableHeight * 0.35);
+                obs.baseY = H / 2 - obs.height / 2;
+                obs.y = obs.baseY;
+                obs.moveAmp = rand(60, 130);
+                obs.moveSpeed = rand(0.02, 0.04);
+                obs.color = '#fbbf24';
+            } else if (type === 'double') {
+                obs.height = rand(usableHeight * 0.25, usableHeight * 0.35);
+                obs.y = 0;
+                obs.color = '#ef4444';
+                // مانع دوم از پایین
+                obstacles.push({
+                    x: W + 20,
+                    width: 30,
+                    height: obs.height,
+                    y: H - GROUND_HEIGHT - obs.height,
+                    passed: false,
+                    type: 'double_bottom',
+                    color: '#ef4444',
+                    baseY: 0,
+                    phase: 0,
+                    moveAmp: 0,
+                    moveSpeed: 0
+                });
+            } else if (type === 'spinning') {
+                obs.height = 30;
+                obs.width = 30;
+                obs.y = rand(50, H - GROUND_HEIGHT - 80);
+                obs.color = '#f87171';
+                obs.rotation = 0;
+                obs.rotateSpeed = 0.08;
+            }
+
+            obstacles.push(obs);
         }
 
-        // ====== آپدیت ======
+        // ========== Spawn Power-up ==========
+        function spawnPowerup() {
+            const types = ['shield', 'slow', 'double'];
+            const type = choose(types);
+            powerups.push({
+                x: W + 20,
+                y: rand(80, H - GROUND_HEIGHT - 80),
+                size: 30,
+                type: type,
+                rotation: 0,
+                bob: 0
+            });
+        }
+
+        // ========== Update ==========
         function update() {
             if (gameState !== STATE.PLAYING) return;
 
-            frameCount++;
-            speedIncreaseTimer++;
-            obstacleSpawnTimer++;
+            const stage = STAGES[currentStageIndex];
 
-            // افزایش سرعت هر ۵ ثانیه (300 فریم)
-            if (speedIncreaseTimer >= 300) {
-                speedIncreaseTimer = 0;
-                gameSpeed += 0.5;
+            frameCount++;
+            speedTimer++;
+            obstacleSpawnTimer++;
+            powerupTimer++;
+
+            // افزایش سرعت
+            gameSpeed = stage.baseSpeed + frameCount * stage.speedIncrease;
+
+            // اسلوموشن
+            let speedMult = 1;
+            if (activePowerup && activePowerup.type === 'slow') {
+                speedMult = 0.55;
             }
 
-            // افزایش امتیاز
-            score = Math.floor(frameCount / 6);
+            const effectiveSpeed = gameSpeed * speedMult;
+
+            // امتیاز
+            score = Math.floor(frameCount / 5);
+            stageScore = score;
+            totalScore = score; // برای نمایش
             document.getElementById('scoreDisplay').textContent = score;
 
-            // ====== فیزیک بازیکن ======
-            const gravityDir = player.isGravityUp ? -1 : 1;
-            player.vy += player.gravity * gravityDir;
-            player.y += player.vy;
+            // Progress bar
+            const progress = Math.min(100, (score / stage.goal) * 100);
+            document.getElementById('stageProgress').style.width = progress + '%';
 
-            // محدودیت بالا و پایین
-            const ceiling = 0;
-            const floor = H - GROUND_HEIGHT - player.size;
-
-            if (player.isGravityUp) {
-                // جاذبه به سمت بالا
-                if (player.y <= ceiling) {
-                    player.y = ceiling;
-                    player.vy = 0;
-                }
-                if (player.y >= floor) {
-                    player.y = floor;
-                    player.vy = 0;
-                }
-            } else {
-                // جاذبه به سمت پایین
-                if (player.y >= floor) {
-                    player.y = floor;
-                    player.vy = 0;
-                }
-                if (player.y <= ceiling) {
-                    player.y = ceiling;
-                    player.vy = 0;
-                }
+            // Power-up انقضا
+            if (activePowerup && Date.now() > activePowerup.until) {
+                activePowerup = null;
+                updatePowerupBar();
             }
 
-            // چرخش نرم
-            player.rotation += (player.targetRotation - player.rotation) * 0.15;
-
-            // ====== موانع ======
-            // ساخت مانع جدید
-            const dynamicInterval = Math.max(50, obstacleSpawnInterval - gameSpeed * 3);
+            // ساخت مانع
+            const dynamicInterval = Math.max(40, stage.spawnInterval - gameSpeed * 4);
             if (obstacleSpawnTimer >= dynamicInterval) {
                 obstacleSpawnTimer = 0;
                 spawnObstacle();
             }
 
+            // ساخت power-up (اگه مرحله اجازه بده)
+            if (stage.powerups && powerupTimer >= 500 && Math.random() > 0.6) {
+                powerupTimer = 0;
+                spawnPowerup();
+            }
+
+            // فیزیک بازیکن
+            const gravityDir = player.isGravityUp ? -1 : 1;
+            player.vy += player.gravity * gravityDir;
+            player.y += player.vy;
+
+            const ceiling = 0;
+            const floor = H - GROUND_HEIGHT - player.size;
+
+            if (player.y <= ceiling) {
+                player.y = ceiling;
+                if (player.vy < 0) player.vy = 0;
+            }
+            if (player.y >= floor) {
+                player.y = floor;
+                if (player.vy > 0) player.vy = 0;
+            }
+
+            // چرخش نرم
+            player.rotation += (player.targetRotation - player.rotation) * 0.18;
+
+            // Trail
+            player.trail.push({ x: player.x, y: player.y, life: 1 });
+            if (player.trail.length > 8) player.trail.shift();
+            player.trail.forEach(t => t.life -= 0.12);
+
             // آپدیت موانع
             for (let i = obstacles.length - 1; i >= 0; i--) {
                 const obs = obstacles[i];
-                obs.x -= gameSpeed;
+                obs.x -= effectiveSpeed;
 
-                // حذف مانع از صفحه
+                // حرکت‌های خاص
+                if (obs.type === 'moving') {
+                    obs.phase += obs.moveSpeed;
+                    obs.y = obs.baseY + Math.sin(obs.phase) * obs.moveAmp;
+                }
+                if (obs.type === 'spinning') {
+                    obs.rotation = (obs.rotation || 0) + obs.rotateSpeed;
+                }
+
+                // حذف
                 if (obs.x + obs.width < 0) {
                     obstacles.splice(i, 1);
                     continue;
                 }
 
-                // چک برخورد
+                // برخورد
                 if (checkCollision(player, obs)) {
-                    createParticles(player.x + player.size / 2, player.y + player.size / 2, '#ef4444', 25);
+                    if (activePowerup && activePowerup.type === 'shield') {
+                        // سپر نجات می‌ده
+                        activePowerup = null;
+                        updatePowerupBar();
+                        createParticles(obs.x + obs.width / 2, obs.y + obs.height / 2, '#10b981', 20);
+                        obstacles.splice(i, 1);
+                        continue;
+                    }
+                    createParticles(player.x + player.size / 2, player.y + player.size / 2, CHARACTERS[selectedCharIndex].color1, 30, 4);
                     gameOver();
                     return;
                 }
 
-                // امتیاز عبور از مانع
+                // امتیاز عبور
                 if (!obs.passed && obs.x + obs.width < player.x) {
                     obs.passed = true;
                 }
             }
 
-            // ====== ذرات ======
+            // آپدیت power-ups
+            for (let i = powerups.length - 1; i >= 0; i--) {
+                const pu = powerups[i];
+                pu.x -= effectiveSpeed;
+                pu.rotation += 0.05;
+                pu.bob += 0.1;
+
+                if (pu.x + pu.size < 0) {
+                    powerups.splice(i, 1);
+                    continue;
+                }
+
+                // برخورد با power-up
+                if (rectCircleCollision(player, pu)) {
+                    activatePowerup(pu.type);
+                    createParticles(pu.x + pu.size / 2, pu.y + pu.size / 2, '#10b981', 15);
+                    powerups.splice(i, 1);
+                }
+            }
+
+            // ذرات
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.2;
+                p.vy += 0.25;
+                p.vx *= 0.98;
                 p.life -= 0.025;
                 p.size *= 0.98;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
 
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
-                }
+            // چک برد مرحله
+            if (score >= stage.goal) {
+                stageComplete();
             }
         }
 
-        // ====== چک برخورد ======
-        function checkCollision(p, obs) {
-            // AABB collision (ساده‌شده)
-            const px = p.x;
-            const py = p.y;
-            const ps = p.size;
+        function rectCircleCollision(rect, circle) {
+            const cx = circle.x + circle.size / 2;
+            const cy = circle.y + circle.size / 2;
+            const rx = rect.x + rect.size / 2;
+            const ry = rect.y + rect.size / 2;
+            const dx = cx - rx;
+            const dy = cy - ry;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            return dist < (rect.size / 2 + circle.size / 2);
+        }
 
+        function activatePowerup(type) {
+            const durations = {
+                shield: 8000,
+                slow: 5000,
+                double: 10000
+            };
+            activePowerup = {
+                type: type,
+                until: Date.now() + durations[type]
+            };
+            updatePowerupBar();
+        }
+
+        function updatePowerupBar() {
+            const bar = document.getElementById('powerupBar');
+            if (!activePowerup) {
+                bar.innerHTML = '';
+                return;
+            }
+            const icons = { shield: '🛡️', slow: '⏱️', double: '✨' };
+            const names = { shield: 'سپر', slow: 'اسلوموشن', double: 'امتیاز دوبرابر' };
+            bar.innerHTML = `<div class="powerup-icon">${icons[activePowerup.type]}</div>`;
+        }
+
+        function checkCollision(p, obs) {
+            const px = p.x, py = p.y, ps = p.size;
             return (
                 px < obs.x + obs.width &&
                 px + ps > obs.x &&
@@ -619,118 +1232,259 @@
             );
         }
 
-        // ====== رندر ======
-        function render() {
-            // پاک کردن
-            ctx.clearRect(0, 0, W, H);
+        // ========== Stage Complete ==========
+        function stageComplete() {
+            gameState = STATE.MENU;
+            const stage = STAGES[currentStageIndex];
 
-            // ====== پس‌زمینه ======
-            // ستاره‌های متحرک
-            ctx.fillStyle = 'rgba(0, 217, 255, 0.15)';
-            for (let i = 0; i < 50; i++) {
-                const starX = (i * 137 + frameCount * 0.5) % W;
-                const starY = (i * 89) % H;
-                ctx.fillRect(starX, starY, 2, 2);
+            // باز کردن مرحله بعد
+            if (stage.id >= unlockedStages && stage.id < STAGES.length) {
+                unlockedStages = stage.id + 1;
+                localStorage.setItem('gfUnlocked', unlockedStages);
             }
 
-            // ====== زمین و سقف ======
-            // سقف
-            const ceilingGrad = ctx.createLinearGradient(0, 0, 0, 15);
-            ceilingGrad.addColorStop(0, '#7c3aed');
-            ceilingGrad.addColorStop(1, 'rgba(124, 58, 237, 0.2)');
-            ctx.fillStyle = ceilingGrad;
-            ctx.fillRect(0, 0, W, 3);
+            // رکورد
+            let isNewRecord = false;
+            if (score > bestScore) {
+                bestScore = score;
+                localStorage.setItem('gfBest', bestScore);
+                isNewRecord = true;
+            }
 
-            // زمین
+            // آخرین مرحله؟
+            if (stage.id === STAGES.length) {
+                showWin();
+                return;
+            }
+
+            // برو به مرحله بعد
+            const nextStage = STAGES[currentStageIndex + 1];
+            const trans = document.getElementById('stageTransition');
+            trans.innerHTML = `
+                <div class="overlay-icon" style="font-size: 60px;">🎉</div>
+                <div class="stage-transition-name" style="font-size: 26px; color: #10b981; margin-bottom: 10px;">مرحله ${stage.id} تموم شد!</div>
+                <div style="color: #8b949e; margin-bottom: 20px;">امتیاز: <b style="color: #00d9ff;">${score}</b></div>
+                <div class="stage-transition-number">${nextStage.id}</div>
+                <div class="stage-transition-name">${nextStage.name}</div>
+            `;
+            trans.classList.add('active');
+
+            setTimeout(() => {
+                trans.classList.remove('active');
+                currentStageIndex++;
+                initStage(STAGES[currentStageIndex]);
+                setTimeout(() => { gameState = STATE.PLAYING; }, 100);
+            }, 2200);
+        }
+
+        function showWin() {
+            hideAllOverlays();
+            document.getElementById('winScore').textContent = score;
+            document.getElementById('winOverlay').classList.remove('hidden');
+            gameState = STATE.WIN;
+        }
+
+        // ========== Game Over ==========
+        function gameOver() {
+            gameState = STATE.GAMEOVER;
+            let isNewRecord = false;
+            if (score > bestScore) {
+                bestScore = score;
+                localStorage.setItem('gfBest', bestScore);
+                isNewRecord = true;
+            }
+
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalStage').textContent = STAGES[currentStageIndex].id;
+            document.getElementById('finalBest').textContent = bestScore;
+
+            const badge = document.getElementById('recordBadge');
+            badge.innerHTML = isNewRecord ? '<div class="new-record">🏆 رکورد جدید!</div>' : '';
+
+            hideAllOverlays();
+            document.getElementById('gameOverOverlay').classList.remove('hidden');
+        }
+
+        // ========== Render ==========
+        function render() {
+            const stage = STAGES[currentStageIndex] || STAGES[0];
+            const char = CHARACTERS[selectedCharIndex];
+
+            // پس‌زمینه
+            const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+            bgGrad.addColorStop(0, stage.bgTop || '#0d1b2a');
+            bgGrad.addColorStop(0.5, stage.bgBottom || '#1b263b');
+            bgGrad.addColorStop(1, stage.bgTop || '#0d1b2a');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, W, H);
+
+            // ستاره‌ها
+            ctx.fillStyle = 'rgba(0, 217, 255, 0.15)';
+            for (let i = 0; i < 50; i++) {
+                const sx = (i * 137 + frameCount * 0.3) % W;
+                const sy = (i * 89) % H;
+                ctx.fillRect(sx, sy, 2, 2);
+            }
+
+            // سقف نئونی
+            const ceilGrad = ctx.createLinearGradient(0, 0, 0, 12);
+            ceilGrad.addColorStop(0, '#7c3aed');
+            ceilGrad.addColorStop(1, 'rgba(124, 58, 237, 0)');
+            ctx.fillStyle = ceilGrad;
+            ctx.fillRect(0, 0, W, 12);
+
+            // زمین نئونی
             const groundGrad = ctx.createLinearGradient(0, H - GROUND_HEIGHT, 0, H);
-            groundGrad.addColorStop(0, 'rgba(0, 217, 255, 0.2)');
+            groundGrad.addColorStop(0, 'rgba(0, 217, 255, 0.3)');
             groundGrad.addColorStop(1, '#00d9ff');
             ctx.fillStyle = groundGrad;
             ctx.fillRect(0, H - GROUND_HEIGHT, W, GROUND_HEIGHT);
-
-            // خط نور روی زمین
             ctx.fillStyle = '#00d9ff';
             ctx.fillRect(0, H - GROUND_HEIGHT - 2, W, 2);
 
-            // ====== موانع ======
+            // موانع
             obstacles.forEach(obs => {
-                // سایه
-                ctx.shadowColor = obs.color;
-                ctx.shadowBlur = 20;
-                
-                // بدنه مانع
-                const grad = ctx.createLinearGradient(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height);
-                grad.addColorStop(0, obs.color);
-                grad.addColorStop(1, obs.color === '#7c3aed' ? '#4c1d95' : '#991b1b');
-                ctx.fillStyle = grad;
-                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+                ctx.save();
 
-                // خط نور بالا/پایین
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                if (obs.y === 0) {
-                    ctx.fillRect(obs.x, obs.y + obs.height - 3, obs.width, 3);
+                if (obs.type === 'spinning') {
+                    ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                    ctx.rotate(obs.rotation || 0);
+                    ctx.translate(-obs.width / 2, -obs.height / 2);
+
+                    ctx.shadowColor = obs.color;
+                    ctx.shadowBlur = 20;
+                    ctx.fillStyle = obs.color;
+                    ctx.fillRect(0, 0, obs.width, obs.height);
+
+                    ctx.shadowBlur = 0;
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(0, 0, obs.width, obs.height);
                 } else {
-                    ctx.fillRect(obs.x, obs.y, obs.width, 3);
+                    ctx.shadowColor = obs.color;
+                    ctx.shadowBlur = 18;
+
+                    const grad = ctx.createLinearGradient(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height);
+                    grad.addColorStop(0, obs.color);
+                    grad.addColorStop(1, shadeColor(obs.color, -40));
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                    if (obs.y < H / 2) {
+                        ctx.fillRect(obs.x, obs.y + obs.height - 3, obs.width, 3);
+                    } else {
+                        ctx.fillRect(obs.x, obs.y, obs.width, 3);
+                    }
+
+                    ctx.strokeStyle = obs.color;
+                    ctx.lineWidth = 1.5;
+                    ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
                 }
 
-                // لبه‌های نورانی
-                ctx.strokeStyle = obs.color;
-                ctx.lineWidth = 2;
-                ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+                ctx.restore();
             });
-
             ctx.shadowBlur = 0;
 
-            // ====== بازیکن ======
-            if (gameState !== STATE.MENU) {
+            // Power-ups
+            powerups.forEach(pu => {
+                ctx.save();
+                ctx.translate(pu.x + pu.size / 2, pu.y + pu.size / 2 + Math.sin(pu.bob) * 5);
+                ctx.rotate(pu.rotation);
+
+                ctx.shadowColor = '#10b981';
+                ctx.shadowBlur = 25;
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.3)';
+                ctx.beginPath();
+                ctx.arc(0, 0, pu.size / 2 + 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+                ctx.font = 'bold 24px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const icons = { shield: '🛡️', slow: '⏱️', double: '✨' };
+                ctx.fillText(icons[pu.type], 0, 2);
+
+                ctx.restore();
+            });
+
+            // Trail بازیکن
+            if (gameState === STATE.PLAYING) {
+                player.trail.forEach((t, i) => {
+                    if (t.life <= 0) return;
+                    ctx.globalAlpha = t.life * 0.3;
+                    ctx.fillStyle = char.color1;
+                    const size = player.size * t.life * 0.7;
+                    ctx.fillRect(t.x + (player.size - size) / 2, t.y + (player.size - size) / 2, size, size);
+                });
+                ctx.globalAlpha = 1;
+            }
+
+            // بازیکن
+            if (gameState === STATE.PLAYING || gameState === STATE.GAMEOVER) {
                 ctx.save();
                 ctx.translate(player.x + player.size / 2, player.y + player.size / 2);
                 ctx.rotate(player.rotation);
 
-                // سایه
-                ctx.shadowColor = '#00d9ff';
+                // هاله (اگه سپر فعاله)
+                if (activePowerup && activePowerup.type === 'shield') {
+                    ctx.shadowColor = '#10b981';
+                    ctx.shadowBlur = 40;
+                    ctx.strokeStyle = '#10b981';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, player.size / 2 + 12, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                ctx.shadowColor = char.color1;
                 ctx.shadowBlur = 25;
 
-                // بدنه بازیکن
                 const playerGrad = ctx.createLinearGradient(-player.size / 2, -player.size / 2, player.size / 2, player.size / 2);
-                playerGrad.addColorStop(0, '#00d9ff');
-                playerGrad.addColorStop(1, '#7c3aed');
+                playerGrad.addColorStop(0, char.color1);
+                playerGrad.addColorStop(1, char.color2);
                 ctx.fillStyle = playerGrad;
 
-                // مکعب گرد شده
-                const r = 6;
-                const s = player.size;
+                const r = 7, s = player.size;
                 ctx.beginPath();
                 ctx.roundRect(-s / 2, -s / 2, s, s, r);
                 ctx.fill();
 
                 // طرح داخلی
                 ctx.shadowBlur = 0;
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.roundRect(-s / 2 + 6, -s / 2 + 6, s - 12, s - 12, r - 2);
                 ctx.stroke();
 
                 // چشم‌ها
-                ctx.fillStyle = '#ffffff';
+                ctx.fillStyle = char.eyeColor;
                 ctx.beginPath();
                 ctx.arc(-6, -4, 4, 0, Math.PI * 2);
                 ctx.arc(6, -4, 4, 0, Math.PI * 2);
                 ctx.fill();
 
-                ctx.fillStyle = '#0a0e14';
+                ctx.fillStyle = '#05080d';
                 ctx.beginPath();
                 ctx.arc(-6, -3, 2, 0, Math.PI * 2);
                 ctx.arc(6, -3, 2, 0, Math.PI * 2);
                 ctx.fill();
 
+                // دهن
+                ctx.strokeStyle = char.eyeColor;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.arc(0, 4, 4, 0.2 * Math.PI, 0.8 * Math.PI);
+                ctx.stroke();
+
                 ctx.restore();
                 ctx.shadowBlur = 0;
             }
 
-            // ====== ذرات ======
+            // ذرات
             particles.forEach(p => {
                 ctx.globalAlpha = p.life;
                 ctx.fillStyle = p.color;
@@ -741,19 +1495,28 @@
             ctx.globalAlpha = 1;
         }
 
-        // ====== حلقه بازی ======
+        function shadeColor(color, percent) {
+            const num = parseInt(color.replace('#', ''), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = Math.max(0, Math.min(255, (num >> 16) + amt));
+            const G = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amt));
+            const B = Math.max(0, Math.min(255, (num & 0x0000FF) + amt));
+            return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+        }
+
+        // ========== Loop ==========
         function gameLoop() {
             update();
             render();
             requestAnimationFrame(gameLoop);
         }
 
-        // ====== راه‌اندازی ======
+        // ========== Init ==========
         resizeCanvas();
         player.y = H / 2;
         document.getElementById('bestDisplay').textContent = bestScore;
 
-        // پشتیبانی از roundRect در مرورگرهای قدیمی
+        // پشتیبانی roundRect
         if (!CanvasRenderingContext2D.prototype.roundRect) {
             CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
                 if (w < 2 * r) r = w / 2;
