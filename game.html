@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Gravity Flip | امیرحسین حسین‌زاده</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #0a0e14;
+            color: #e6edf3;
+            font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 100vh;
+            max-height: 700px;
+            background: linear-gradient(180deg, #0d1b2a 0%, #1b263b 50%, #0d1b2a 100%);
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 0 60px rgba(0, 217, 255, 0.2);
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* HUD */
+        .hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .score-box {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 12px;
+            padding: 10px 20px;
+        }
+
+        .score-label {
+            font-size: 11px;
+            color: #8b949e;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .score-value {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d9ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .best-box {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 12px;
+            padding: 8px 16px;
+            text-align: left;
+        }
+
+        .best-box .score-label {
+            color: #7c3aed;
+        }
+
+        .best-box .score-value {
+            font-size: 18px;
+            background: linear-gradient(135deg, #7c3aed, #00d9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 14, 20, 0.92);
+            backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+            z-index: 100;
+            transition: opacity 0.4s ease;
+        }
+
+        .overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .overlay-icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .overlay-title {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00d9ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .overlay-subtitle {
+            font-size: 16px;
+            color: #8b949e;
+            margin-bottom: 35px;
+            max-width: 400px;
+            line-height: 1.8;
+        }
+
+        .overlay-hint {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px 24px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #00d9ff;
+        }
+
+        .overlay-hint .key {
+            background: #00d9ff;
+            color: #0a0e14;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .play-btn {
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #00d9ff, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.5);
+        }
+
+        .play-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Final Score */
+        .final-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .final-stat {
+            text-align: center;
+        }
+
+        .final-stat-value {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d9ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .final-stat-label {
+            font-size: 12px;
+            color: #8b949e;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        .new-record {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #0a0e14;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        /* Mobile touch hint */
+        .touch-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #8b949e;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 16px;
+            border-radius: 20px;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 600px) {
+            .overlay-title {
+                font-size: 28px;
+            }
+            .overlay-icon {
+                font-size: 55px;
+            }
+            .overlay-subtitle {
+                font-size: 14px;
+            }
+            .score-value {
+                font-size: 22px;
+            }
+            .play-btn {
+                padding: 15px 40px;
+                font-size: 16px;
+            }
+            .final-stat-value {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <div class="hud">
+            <div class="score-box">
+                <div class="score-label">امتیاز</div>
+                <div class="score-value" id="scoreDisplay">0</div>
+            </div>
+            <div class="best-box">
+                <div class="score-label">رکورد</div>
+                <div class="score-value" id="bestDisplay">0</div>
+            </div>
+        </div>
+
+        <!-- Overlay شروع -->
+        <div class="overlay" id="startOverlay">
+            <div class="overlay-icon">🎮</div>
+            <h1 class="overlay-title">Gravity Flip</h1>
+            <p class="overlay-subtitle">
+                با هر کلیک، جاذبه برعکس می‌شه!<br>
+                از موانع رد شو و رکورد بزن.
+            </p>
+            <div class="overlay-hint">
+                <span class="key">Space</span>
+                <span>یا کلیک / لمس کن</span>
+            </div>
+            <button class="play-btn" onclick="startGame()">▶ شروع بازی</button>
+        </div>
+
+        <!-- Overlay پایان -->
+        <div class="overlay hidden" id="gameOverOverlay">
+            <div class="overlay-icon">💥</div>
+            <h1 class="overlay-title">Game Over</h1>
+            <div id="recordBadge"></div>
+            <div class="final-stats">
+                <div class="final-stat">
+                    <div class="final-stat-value" id="finalScore">0</div>
+                    <div class="final-stat-label">امتیاز</div>
+                </div>
+                <div class="final-stat">
+                    <div class="final-stat-value" id="finalBest">0</div>
+                    <div class="final-stat-label">رکورد</div>
+                </div>
+            </div>
+            <button class="play-btn" onclick="startGame()">🔄 دوباره بازی کن</button>
+        </div>
+
+        <div class="touch-hint">👆 برای پرش روی صفحه کلیک کن</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // اندازه Canvas
+        let W, H;
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            W = rect.width;
+            H = rect.height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // ====== حالت بازی ======
+        const STATE = {
+            MENU: 'menu',
+            PLAYING: 'playing',
+            GAMEOVER: 'gameover'
+        };
+
+        let gameState = STATE.MENU;
+
+        // ====== بازیکن ======
+        const player = {
+            x: 100,
+            y: 0,
+            size: 40,
+            vy: 0,
+            gravity: 0.6,
+            jumpForce: -11,
+            isGravityUp: false, // آیا جاذبه برعکسه؟
+            rotation: 0,
+            targetRotation: 0
+        };
+
+        // ====== موانع ======
+        let obstacles = [];
+        let obstacleSpawnTimer = 0;
+        let obstacleSpawnInterval = 90; // هر چند فریم یه مانع جدید
+
+        // ====== امتیاز و سرعت ======
+        let score = 0;
+        let bestScore = parseInt(localStorage.getItem('gravityFlipBest') || '0');
+        let gameSpeed = 4;
+        let speedIncreaseTimer = 0;
+        let frameCount = 0;
+
+        // ====== ذرات ======
+        let particles = [];
+
+        // ====== تنظیمات ======
+        const GROUND_HEIGHT = 40;
+
+        // ====== شروع بازی ======
+        function startGame() {
+            gameState = STATE.PLAYING;
+            score = 0;
+            gameSpeed = 4;
+            frameCount = 0;
+            obstacleSpawnTimer = 0;
+            obstacles = [];
+            particles = [];
+            player.y = H / 2;
+            player.vy = 0;
+            player.isGravityUp = false;
+            player.rotation = 0;
+            player.targetRotation = 0;
+
+            document.getElementById('startOverlay').classList.add('hidden');
+            document.getElementById('gameOverOverlay').classList.add('hidden');
+            document.getElementById('scoreDisplay').textContent = '0';
+            document.getElementById('bestDisplay').textContent = bestScore;
+        }
+
+        // ====== پایان بازی ======
+        function gameOver() {
+            gameState = STATE.GAMEOVER;
+            
+            let isNewRecord = false;
+            if (score > bestScore) {
+                bestScore = score;
+                localStorage.setItem('gravityFlipBest', bestScore);
+                isNewRecord = true;
+            }
+
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalBest').textContent = bestScore;
+            
+            const badge = document.getElementById('recordBadge');
+            if (isNewRecord) {
+                badge.innerHTML = '<div class="new-record">🏆 رکورد جدید!</div>';
+            } else {
+                badge.innerHTML = '';
+            }
+
+            document.getElementById('gameOverOverlay').classList.remove('hidden');
+        }
+
+        // ====== پرش (برعکس کردن جاذبه) ======
+        function flip() {
+            if (gameState !== STATE.PLAYING) return;
+            
+            player.isGravityUp = !player.isGravityUp;
+            player.vy = player.isGravityUp ? -player.jumpForce : player.jumpForce;
+            player.targetRotation += Math.PI; // چرخش ۱۸۰ درجه
+
+            // ذرات
+            createParticles(player.x + player.size / 2, player.y + player.size / 2, '#00d9ff', 8);
+        }
+
+        // ====== ورودی‌ها ======
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
+                e.preventDefault();
+                if (gameState === STATE.MENU || gameState === STATE.GAMEOVER) {
+                    startGame();
+                } else {
+                    flip();
+                }
+            }
+        });
+
+        canvas.addEventListener('mousedown', () => {
+            if (gameState === STATE.PLAYING) flip();
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameState === STATE.PLAYING) flip();
+        }, { passive: false });
+
+        // ====== ذرات ======
+        function createParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    life: 1,
+                    color: color,
+                    size: Math.random() * 4 + 2
+                });
+            }
+        }
+
+        // ====== ساخت مانع ======
+        function spawnObstacle() {
+            const minHeight = 60;
+            const maxHeight = H - GROUND_HEIGHT * 2 - 120;
+            const height = Math.random() * (maxHeight - minHeight) + minHeight;
+            
+            // به صورت تصادفی از کف یا از سقف
+            const fromTop = Math.random() > 0.5;
+            
+            const obstacle = {
+                x: W + 20,
+                width: 30,
+                height: height,
+                y: fromTop ? 0 : H - GROUND_HEIGHT - height,
+                passed: false,
+                color: Math.random() > 0.5 ? '#7c3aed' : '#ef4444'
+            };
+            
+            obstacles.push(obstacle);
+        }
+
+        // ====== آپدیت ======
+        function update() {
+            if (gameState !== STATE.PLAYING) return;
+
+            frameCount++;
+            speedIncreaseTimer++;
+            obstacleSpawnTimer++;
+
+            // افزایش سرعت هر ۵ ثانیه (300 فریم)
+            if (speedIncreaseTimer >= 300) {
+                speedIncreaseTimer = 0;
+                gameSpeed += 0.5;
+            }
+
+            // افزایش امتیاز
+            score = Math.floor(frameCount / 6);
+            document.getElementById('scoreDisplay').textContent = score;
+
+            // ====== فیزیک بازیکن ======
+            const gravityDir = player.isGravityUp ? -1 : 1;
+            player.vy += player.gravity * gravityDir;
+            player.y += player.vy;
+
+            // محدودیت بالا و پایین
+            const ceiling = 0;
+            const floor = H - GROUND_HEIGHT - player.size;
+
+            if (player.isGravityUp) {
+                // جاذبه به سمت بالا
+                if (player.y <= ceiling) {
+                    player.y = ceiling;
+                    player.vy = 0;
+                }
+                if (player.y >= floor) {
+                    player.y = floor;
+                    player.vy = 0;
+                }
+            } else {
+                // جاذبه به سمت پایین
+                if (player.y >= floor) {
+                    player.y = floor;
+                    player.vy = 0;
+                }
+                if (player.y <= ceiling) {
+                    player.y = ceiling;
+                    player.vy = 0;
+                }
+            }
+
+            // چرخش نرم
+            player.rotation += (player.targetRotation - player.rotation) * 0.15;
+
+            // ====== موانع ======
+            // ساخت مانع جدید
+            const dynamicInterval = Math.max(50, obstacleSpawnInterval - gameSpeed * 3);
+            if (obstacleSpawnTimer >= dynamicInterval) {
+                obstacleSpawnTimer = 0;
+                spawnObstacle();
+            }
+
+            // آپدیت موانع
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                obs.x -= gameSpeed;
+
+                // حذف مانع از صفحه
+                if (obs.x + obs.width < 0) {
+                    obstacles.splice(i, 1);
+                    continue;
+                }
+
+                // چک برخورد
+                if (checkCollision(player, obs)) {
+                    createParticles(player.x + player.size / 2, player.y + player.size / 2, '#ef4444', 25);
+                    gameOver();
+                    return;
+                }
+
+                // امتیاز عبور از مانع
+                if (!obs.passed && obs.x + obs.width < player.x) {
+                    obs.passed = true;
+                }
+            }
+
+            // ====== ذرات ======
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.2;
+                p.life -= 0.025;
+                p.size *= 0.98;
+
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+
+        // ====== چک برخورد ======
+        function checkCollision(p, obs) {
+            // AABB collision (ساده‌شده)
+            const px = p.x;
+            const py = p.y;
+            const ps = p.size;
+
+            return (
+                px < obs.x + obs.width &&
+                px + ps > obs.x &&
+                py < obs.y + obs.height &&
+                py + ps > obs.y
+            );
+        }
+
+        // ====== رندر ======
+        function render() {
+            // پاک کردن
+            ctx.clearRect(0, 0, W, H);
+
+            // ====== پس‌زمینه ======
+            // ستاره‌های متحرک
+            ctx.fillStyle = 'rgba(0, 217, 255, 0.15)';
+            for (let i = 0; i < 50; i++) {
+                const starX = (i * 137 + frameCount * 0.5) % W;
+                const starY = (i * 89) % H;
+                ctx.fillRect(starX, starY, 2, 2);
+            }
+
+            // ====== زمین و سقف ======
+            // سقف
+            const ceilingGrad = ctx.createLinearGradient(0, 0, 0, 15);
+            ceilingGrad.addColorStop(0, '#7c3aed');
+            ceilingGrad.addColorStop(1, 'rgba(124, 58, 237, 0.2)');
+            ctx.fillStyle = ceilingGrad;
+            ctx.fillRect(0, 0, W, 3);
+
+            // زمین
+            const groundGrad = ctx.createLinearGradient(0, H - GROUND_HEIGHT, 0, H);
+            groundGrad.addColorStop(0, 'rgba(0, 217, 255, 0.2)');
+            groundGrad.addColorStop(1, '#00d9ff');
+            ctx.fillStyle = groundGrad;
+            ctx.fillRect(0, H - GROUND_HEIGHT, W, GROUND_HEIGHT);
+
+            // خط نور روی زمین
+            ctx.fillStyle = '#00d9ff';
+            ctx.fillRect(0, H - GROUND_HEIGHT - 2, W, 2);
+
+            // ====== موانع ======
+            obstacles.forEach(obs => {
+                // سایه
+                ctx.shadowColor = obs.color;
+                ctx.shadowBlur = 20;
+                
+                // بدنه مانع
+                const grad = ctx.createLinearGradient(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height);
+                grad.addColorStop(0, obs.color);
+                grad.addColorStop(1, obs.color === '#7c3aed' ? '#4c1d95' : '#991b1b');
+                ctx.fillStyle = grad;
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+
+                // خط نور بالا/پایین
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                if (obs.y === 0) {
+                    ctx.fillRect(obs.x, obs.y + obs.height - 3, obs.width, 3);
+                } else {
+                    ctx.fillRect(obs.x, obs.y, obs.width, 3);
+                }
+
+                // لبه‌های نورانی
+                ctx.strokeStyle = obs.color;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+            });
+
+            ctx.shadowBlur = 0;
+
+            // ====== بازیکن ======
+            if (gameState !== STATE.MENU) {
+                ctx.save();
+                ctx.translate(player.x + player.size / 2, player.y + player.size / 2);
+                ctx.rotate(player.rotation);
+
+                // سایه
+                ctx.shadowColor = '#00d9ff';
+                ctx.shadowBlur = 25;
+
+                // بدنه بازیکن
+                const playerGrad = ctx.createLinearGradient(-player.size / 2, -player.size / 2, player.size / 2, player.size / 2);
+                playerGrad.addColorStop(0, '#00d9ff');
+                playerGrad.addColorStop(1, '#7c3aed');
+                ctx.fillStyle = playerGrad;
+
+                // مکعب گرد شده
+                const r = 6;
+                const s = player.size;
+                ctx.beginPath();
+                ctx.roundRect(-s / 2, -s / 2, s, s, r);
+                ctx.fill();
+
+                // طرح داخلی
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(-s / 2 + 6, -s / 2 + 6, s - 12, s - 12, r - 2);
+                ctx.stroke();
+
+                // چشم‌ها
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(-6, -4, 4, 0, Math.PI * 2);
+                ctx.arc(6, -4, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#0a0e14';
+                ctx.beginPath();
+                ctx.arc(-6, -3, 2, 0, Math.PI * 2);
+                ctx.arc(6, -3, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+                ctx.shadowBlur = 0;
+            }
+
+            // ====== ذرات ======
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // ====== حلقه بازی ======
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // ====== راه‌اندازی ======
+        resizeCanvas();
+        player.y = H / 2;
+        document.getElementById('bestDisplay').textContent = bestScore;
+
+        // پشتیبانی از roundRect در مرورگرهای قدیمی
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+                if (w < 2 * r) r = w / 2;
+                if (h < 2 * r) r = h / 2;
+                this.beginPath();
+                this.moveTo(x + r, y);
+                this.arcTo(x + w, y, x + w, y + h, r);
+                this.arcTo(x + w, y + h, x, y + h, r);
+                this.arcTo(x, y + h, x, y, r);
+                this.arcTo(x, y, x + w, y, r);
+                this.closePath();
+                return this;
+            };
+        }
+
+        gameLoop();
+    </script>
+
+</body>
+</html>
