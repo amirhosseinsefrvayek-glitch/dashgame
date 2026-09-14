@@ -7,21 +7,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-
         :root {
             --neon-cyan: #00f0ff;
             --neon-purple: #b537f2;
             --neon-pink: #ff2e97;
             --neon-yellow: #ffd60a;
             --neon-green: #06ffa5;
-            --neon-orange: #ff8c42;
             --bg-dark: #05060f;
             --text: #ffffff;
             --text-dim: #8888aa;
             --border: rgba(255, 255, 255, 0.1);
             --glass: rgba(15, 15, 35, 0.85);
         }
-
         html, body {
             background: var(--bg-dark);
             color: var(--text);
@@ -31,451 +28,215 @@
             height: 100%;
             position: fixed;
         }
-
-        #gameCanvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            z-index: 1;
-        }
-
-        .hud {
-            position: fixed;
-            inset: 0;
-            z-index: 10;
-            pointer-events: none;
-        }
-
+        #gameCanvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+        .hud { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
         .hud-top {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
+            position: absolute; top: 15px; left: 15px; right: 15px;
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
         }
-
         .hud-box {
             background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 8px 14px;
-            pointer-events: auto;
-            min-width: 80px;
-            text-align: center;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 12px;
+            padding: 8px 14px; pointer-events: auto;
+            min-width: 80px; text-align: center;
         }
-
         .hud-label {
-            font-size: 9px;
-            color: var(--text-dim);
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 2px;
+            font-size: 9px; color: var(--text-dim); letter-spacing: 1.5px;
+            text-transform: uppercase; font-weight: 700; margin-bottom: 2px;
         }
-
-        .hud-value {
-            font-family: 'Orbitron', monospace;
-            font-size: 20px;
-            font-weight: 900;
-            line-height: 1;
-        }
-
+        .hud-value { font-family: 'Orbitron', monospace; font-size: 20px; font-weight: 900; line-height: 1; }
         .hud-value.score { color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan); }
         .hud-value.coins { color: var(--neon-yellow); text-shadow: 0 0 15px var(--neon-yellow); }
         .hud-value.stage { color: var(--neon-purple); text-shadow: 0 0 15px var(--neon-purple); }
-
         .stage-progress {
-            position: absolute;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            overflow: hidden;
+            position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
+            width: 200px; height: 4px; background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px; overflow: hidden;
         }
-
         .stage-progress-fill {
-            height: 100%;
-            width: 0%;
+            height: 100%; width: 0%;
             background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-            border-radius: 2px;
-            transition: width 0.3s;
-            box-shadow: 0 0 10px var(--neon-cyan);
+            border-radius: 2px; transition: width 0.3s; box-shadow: 0 0 10px var(--neon-cyan);
         }
-
         .pause-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 20px;
-            cursor: pointer;
-            pointer-events: auto;
-            font-family: inherit;
+            position: absolute; top: 15px; right: 15px;
+            width: 44px; height: 44px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--glass); backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 12px;
+            color: var(--text); font-size: 20px; cursor: pointer;
+            pointer-events: auto; font-family: inherit;
         }
-
         .pause-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
-
         .screen {
-            position: fixed;
-            inset: 0;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 20;
+            position: fixed; inset: 0; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; z-index: 20;
             background: rgba(5, 6, 15, 0.95);
-            backdrop-filter: blur(20px);
-            overflow-y: auto;
+            backdrop-filter: blur(20px); overflow-y: auto;
         }
-
         .screen.active { display: flex; animation: screenIn 0.4s ease; }
         @keyframes screenIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
-
         .title-box { text-align: center; max-width: 600px; width: 100%; }
-
         .title-logo {
-            font-size: 70px;
-            margin-bottom: 15px;
+            font-size: 70px; margin-bottom: 15px;
             filter: drop-shadow(0 0 40px var(--neon-cyan));
             animation: logoFloat 3s infinite ease-in-out;
         }
-
         @keyframes logoFloat {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(5px); }
+            50% { transform: translateY(-12px) rotate(5deg); }
         }
-
         .title-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 48px;
-            font-weight: 900;
-            letter-spacing: 5px;
-            margin-bottom: 8px;
+            font-family: 'Orbitron', sans-serif; font-size: 48px; font-weight: 900;
+            letter-spacing: 5px; margin-bottom: 8px;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
             background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             animation: gradientShift 4s ease infinite;
         }
-
         @keyframes gradientShift {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
-
         .title-sub {
-            font-size: 13px;
-            color: var(--text-dim);
-            letter-spacing: 4px;
-            margin-bottom: 30px;
-            font-family: 'Orbitron', sans-serif;
+            font-size: 13px; color: var(--text-dim); letter-spacing: 4px;
+            margin-bottom: 30px; font-family: 'Orbitron', sans-serif;
         }
-
-        .menu-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
+        .menu-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
         .menu-stat {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px 8px;
-            text-align: center;
+            background: var(--glass); border: 1px solid var(--border);
+            border-radius: 14px; padding: 14px 8px; text-align: center;
         }
-
         .menu-stat-value {
-            font-family: 'Orbitron', monospace;
-            font-size: 24px;
-            font-weight: 900;
+            font-family: 'Orbitron', monospace; font-size: 24px; font-weight: 900;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1;
-            margin-bottom: 4px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            line-height: 1; margin-bottom: 4px;
         }
-
         .menu-stat-label {
-            font-size: 9px;
-            color: var(--text-dim);
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            font-weight: 700;
+            font-size: 9px; color: var(--text-dim); letter-spacing: 1.5px;
+            text-transform: uppercase; font-weight: 700;
         }
-
-        /* STAGE PROGRESS IN MENU */
         .stages-panel {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 18px;
-            margin-bottom: 25px;
-            max-height: 280px;
-            overflow-y: auto;
+            background: var(--glass); border: 1px solid var(--border);
+            border-radius: 18px; padding: 18px; margin-bottom: 25px;
+            max-height: 280px; overflow-y: auto;
         }
-
         .stages-panel::-webkit-scrollbar { width: 4px; }
         .stages-panel::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 2px; }
-
         .stages-panel-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: var(--neon-cyan);
-            margin-bottom: 15px;
-            text-align: center;
+            font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 900;
+            letter-spacing: 2px; color: var(--neon-cyan); margin-bottom: 15px; text-align: center;
         }
-
         .stage-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            display: flex; align-items: center; gap: 12px;
             padding: 10px 12px;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 8px;
+            border-radius: 12px; margin-bottom: 8px;
             transition: all 0.2s;
-        }
-
-        .stage-row.unlocked {
             border-color: rgba(0, 240, 255, 0.3);
             background: rgba(0, 240, 255, 0.05);
         }
-
-        .stage-row.locked {
-            opacity: 0.4;
+        .stage-row:hover {
+            transform: translateY(-2px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.2);
         }
-
         .stage-icon {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            flex-shrink: 0;
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; font-size: 16px;
+            background: rgba(255, 255, 255, 0.05); flex-shrink: 0;
         }
-
-        .stage-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .stage-name {
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 3px;
-        }
-
-        .stage-diff {
-            display: flex;
-            gap: 2px;
-            align-items: center;
-        }
-
-        .diff-star {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.15);
-        }
-
-        .diff-star.filled {
-            color: var(--neon-yellow);
-            text-shadow: 0 0 5px var(--neon-yellow);
-        }
-
+        .stage-info { flex: 1; min-width: 0; }
+        .stage-name { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+        .stage-diff { display: flex; gap: 2px; align-items: center; }
+        .diff-star { font-size: 10px; color: rgba(255, 255, 255, 0.15); }
+        .diff-star.filled { color: var(--neon-yellow); text-shadow: 0 0 5px var(--neon-yellow); }
         .stage-percent {
-            font-family: 'Orbitron', monospace;
-            font-size: 14px;
-            font-weight: 900;
-            color: var(--neon-cyan);
-            text-align: left;
-            flex-shrink: 0;
-            min-width: 45px;
+            font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 900;
+            color: var(--neon-cyan); text-align: left; flex-shrink: 0; min-width: 45px;
         }
-
-        .stage-percent.complete {
-            color: var(--neon-green);
-        }
-
-        .stage-percent.locked-text {
-            color: var(--text-dim);
-        }
-
+        .stage-percent.complete { color: var(--neon-green); }
         .stage-progress-bar {
-            width: 100%;
-            height: 3px;
+            width: 100%; height: 3px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-top: 5px;
+            border-radius: 2px; overflow: hidden; margin-top: 5px;
         }
-
         .stage-progress-bar-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-            border-radius: 2px;
-            transition: width 0.5s;
+            border-radius: 2px; transition: width 0.5s;
         }
-
         .menu-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 320px;
-            width: 100%;
-            margin: 0 auto;
+            display: flex; flex-direction: column; gap: 10px;
+            max-width: 320px; width: 100%; margin: 0 auto;
         }
-
         .menu-btn {
             padding: 16px 28px;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-family: inherit;
-            font-size: 16px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s;
+            color: white; border: none; border-radius: 14px;
+            font-family: inherit; font-size: 16px; font-weight: 800;
+            cursor: pointer; transition: all 0.3s;
             box-shadow: 0 8px 25px rgba(0, 240, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-
-        .menu-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.5);
-        }
-
+        .menu-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 240, 255, 0.5); }
         .menu-btn.secondary {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            color: var(--text);
-            box-shadow: none;
+            background: var(--glass); border: 1px solid var(--border);
+            color: var(--text); box-shadow: none;
         }
-
-        .menu-btn.secondary:hover {
-            border-color: var(--neon-cyan);
-            color: var(--neon-cyan);
-        }
-
+        .menu-btn.secondary:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
         .shop-header { text-align: center; margin-bottom: 25px; }
-
         .shop-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 32px;
-            font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900;
             letter-spacing: 3px;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             margin-bottom: 10px;
         }
-
         .shop-coins {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            display: inline-flex; align-items: center; gap: 8px;
             background: rgba(255, 214, 10, 0.1);
             border: 1px solid var(--neon-yellow);
-            border-radius: 20px;
-            padding: 8px 18px;
-            font-family: 'Orbitron', monospace;
-            font-size: 18px;
-            font-weight: 900;
+            border-radius: 20px; padding: 8px 18px;
+            font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 900;
             color: var(--neon-yellow);
             box-shadow: 0 0 20px rgba(255, 214, 10, 0.3);
         }
-
         .shop-tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 20px;
-            background: var(--glass);
-            padding: 6px;
-            border-radius: 12px;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
+            display: flex; gap: 6px; margin-bottom: 20px;
+            background: var(--glass); padding: 6px;
+            border-radius: 12px; max-width: 500px;
+            margin-left: auto; margin-right: auto;
         }
-
         .shop-tab {
-            flex: 1;
-            padding: 10px 16px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            color: var(--text-dim);
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.2s;
+            flex: 1; padding: 10px 16px;
+            background: transparent; border: none; border-radius: 8px;
+            color: var(--text-dim); font-family: inherit; font-size: 13px;
+            font-weight: 800; cursor: pointer; transition: all 0.2s;
         }
-
         .shop-tab.active {
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            color: white;
-            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
+            color: white; box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
         }
-
         .shop-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-            max-width: 700px;
-            width: 100%;
-            max-height: 55vh;
-            overflow-y: auto;
-            padding: 10px;
-            margin-bottom: 20px;
+            gap: 12px; max-width: 700px; width: 100%;
+            max-height: 55vh; overflow-y: auto;
+            padding: 10px; margin-bottom: 20px;
         }
-
         .shop-grid::-webkit-scrollbar { width: 4px; }
         .shop-grid::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 2px; }
-
         .shop-item {
-            background: var(--glass);
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            padding: 15px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
+            background: var(--glass); border: 2px solid var(--border);
+            border-radius: 14px; padding: 15px 10px;
+            text-align: center; cursor: pointer; transition: all 0.3s;
         }
-
         .shop-item:hover { transform: translateY(-3px); border-color: var(--neon-cyan); }
         .shop-item.owned { border-color: var(--neon-green); background: rgba(6, 255, 165, 0.08); }
         .shop-item.equipped {
@@ -483,197 +244,102 @@
             background: rgba(255, 214, 10, 0.1);
             box-shadow: 0 0 25px rgba(255, 214, 10, 0.3);
         }
-
         .shop-item-preview {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 10px;
+            width: 60px; height: 60px; margin: 0 auto 10px;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 30px;
         }
-
-        .shop-item-name {
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
-
+        .shop-item-name { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
         .shop-item-price {
-            font-family: 'Orbitron', monospace;
-            font-size: 12px;
-            font-weight: 900;
+            font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 900;
             color: var(--neon-yellow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
+            display: flex; align-items: center; justify-content: center; gap: 4px;
         }
-
         .shop-item-owned { font-size: 11px; font-weight: 800; color: var(--neon-green); }
         .shop-item-equipped { font-size: 11px; font-weight: 800; color: var(--neon-yellow); }
-
         .gameover-box {
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px 30px;
+            text-align: center; max-width: 400px; width: 100%;
+            background: var(--glass); border: 1px solid var(--border);
+            border-radius: 24px; padding: 40px 30px;
         }
-
         .gameover-icon { font-size: 70px; margin-bottom: 15px; }
-
         .gameover-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 32px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: var(--neon-pink);
-            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900;
+            letter-spacing: 3px; color: var(--neon-pink); margin-bottom: 20px;
         }
-
         .gameover-stats { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-
         .gameover-stat {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            font-size: 14px;
+            display: flex; justify-content: space-between;
+            padding: 10px 15px; background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px; font-size: 14px;
         }
-
         .gameover-stat-label { color: var(--text-dim); font-weight: 700; }
         .gameover-stat-value {
-            font-family: 'Orbitron', monospace;
-            font-weight: 900;
-            color: var(--neon-cyan);
+            font-family: 'Orbitron', monospace; font-weight: 900; color: var(--neon-cyan);
         }
-
         .stage-notif {
-            position: fixed;
-            top: 50%;
-            left: 50%;
+            position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            background: var(--glass);
-            border: 2px solid var(--neon-purple);
-            border-radius: 20px;
-            padding: 25px 40px;
-            z-index: 50;
+            background: var(--glass); border: 2px solid var(--neon-purple);
+            border-radius: 20px; padding: 25px 40px; z-index: 50;
             text-align: center;
             box-shadow: 0 0 60px rgba(181, 55, 242, 0.5);
-            pointer-events: none;
-            opacity: 0;
+            pointer-events: none; opacity: 0;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .stage-notif.show {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
         }
-
         .stage-notif-icon { font-size: 50px; margin-bottom: 10px; }
         .stage-notif-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 22px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: var(--neon-purple);
-            margin-bottom: 5px;
+            font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
+            letter-spacing: 3px; color: var(--neon-purple); margin-bottom: 5px;
         }
         .stage-notif-sub { font-size: 14px; color: var(--text-dim); }
-
         .face-section {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 15px 20px;
-            margin-bottom: 15px;
-            max-width: 500px;
-            width: 100%;
+            background: var(--glass); border: 1px solid var(--border);
+            border-radius: 16px; padding: 15px 20px; margin-bottom: 15px;
+            max-width: 500px; width: 100%;
         }
-
         .face-section-title {
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--neon-cyan);
-            margin-bottom: 12px;
-            letter-spacing: 1px;
+            font-size: 12px; font-weight: 800; color: var(--neon-cyan);
+            margin-bottom: 12px; letter-spacing: 1px;
         }
-
-        .face-options {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
+        .face-options { display: flex; gap: 8px; flex-wrap: wrap; }
         .face-option {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
+            width: 44px; height: 44px; border-radius: 10px;
             background: rgba(255, 255, 255, 0.05);
-            border: 2px solid var(--border);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: all 0.2s;
+            border: 2px solid var(--border); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; transition: all 0.2s;
         }
-
         .face-option:hover { border-color: var(--neon-cyan); transform: scale(1.1); }
         .face-option.selected {
             border-color: var(--neon-cyan);
             background: rgba(0, 240, 255, 0.15);
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
         }
-
-        /* Credit */
         .credit {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
+            position: fixed; bottom: 10px; left: 50%;
             transform: translateX(-50%);
-            font-size: 11px;
-            color: #555577;
+            font-size: 11px; color: #555577;
             font-family: 'Vazirmatn', sans-serif;
-            letter-spacing: 0.5px;
-            z-index: 15;
-            pointer-events: auto;
+            letter-spacing: 0.5px; z-index: 15; pointer-events: auto;
         }
-
         .credit a {
-            color: var(--neon-cyan);
-            text-decoration: none;
-            font-weight: 700;
-            transition: all 0.3s;
+            color: var(--neon-cyan); text-decoration: none;
+            font-weight: 700; transition: all 0.3s;
         }
-
-        .credit a:hover {
-            text-decoration: underline;
-            text-shadow: 0 0 15px var(--neon-cyan);
-        }
-
-        /* Version */
+        .credit a:hover { text-decoration: underline; text-shadow: 0 0 15px var(--neon-cyan); }
         .version {
-            position: fixed;
-            top: 15px;
-            left: 50%;
+            position: fixed; top: 15px; left: 50%;
             transform: translateX(-50%);
-            font-family: 'Orbitron', monospace;
-            font-size: 9px;
-            color: #555577;
-            letter-spacing: 2px;
-            z-index: 15;
-            font-weight: 700;
-            pointer-events: none;
+            font-family: 'Orbitron', monospace; font-size: 9px;
+            color: #555577; letter-spacing: 2px;
+            z-index: 15; font-weight: 700; pointer-events: none;
         }
-
         @media (max-width: 600px) {
             .title-text { font-size: 32px; letter-spacing: 3px; }
             .title-logo { font-size: 55px; }
@@ -713,10 +379,8 @@
         <button class="pause-btn" onclick="pauseGame()">⏸</button>
     </div>
 
-    <!-- Version -->
     <div class="version">NEON DASH VERSION 1.2</div>
 
-    <!-- Credit -->
     <div class="credit">Create by <a href="https://amirhosseinsefrvayek-glitch.github.io/Myresume/" target="_blank">Amirhossein Hosseinzadeh</a></div>
 
     <div class="stage-notif" id="stageNotif">
@@ -747,7 +411,6 @@
                 </div>
             </div>
 
-            <!-- Stage Progress Panel -->
             <div class="stages-panel">
                 <div class="stages-panel-title" id="stagesPanelTitle">📊 پیشرفت مراحل</div>
                 <div id="stagesList"></div>
@@ -831,7 +494,7 @@
     </div>
 
     <script>
-        // ============================================
+             // ============================================
         // TRANSLATIONS
         // ============================================
         const T = {
@@ -847,10 +510,7 @@
                 notEnoughCoins: 'سکه کافی نداری!',
                 menuChars: 'کاراکتر',
                 faceEyes: 'چشم‌ها', faceMouth: 'دهن', faceBodyColor: 'رنگ بدن',
-                stagesPanel: '📊 پیشرفت مراحل',
-                locked: 'قفل',
-                complete: 'کامل',
-                difficulty: 'سختی'
+                stagesPanel: '📊 پیشرفت مراحل'
             },
             en: {
                 score: 'SCORE', coins: '🪙 COINS', stage: 'STAGE', best: 'BEST',
@@ -864,10 +524,7 @@
                 notEnoughCoins: 'Not enough coins!',
                 menuChars: 'Chars',
                 faceEyes: 'Eyes', faceMouth: 'Mouth', faceBodyColor: 'Body Color',
-                stagesPanel: '📊 Stage Progress',
-                locked: 'Locked',
-                complete: 'Complete',
-                difficulty: 'Difficulty'
+                stagesPanel: '📊 Stage Progress'
             }
         };
 
@@ -884,19 +541,13 @@
             ownedChars: ['default'],
             equippedColor: 'cyan',
             equippedChar: 'default',
-            face: {
-                eyeStyle: 'normal',
-                mouthStyle: 'smile',
-                bodyColor: 'auto'
-            },
+            face: { eyeStyle: 'normal', mouthStyle: 'smile', bodyColor: 'auto' },
             stageProgress: {},
             maxStageReached: 1,
             totalGames: 0
         };
 
-        if (!gameData.face) {
-            gameData.face = { eyeStyle: 'normal', mouthStyle: 'smile', bodyColor: 'auto' };
-        }
+        if (!gameData.face) gameData.face = { eyeStyle: 'normal', mouthStyle: 'smile', bodyColor: 'auto' };
         if (!gameData.stageProgress) gameData.stageProgress = {};
         if (!gameData.maxStageReached) gameData.maxStageReached = 1;
 
@@ -942,7 +593,7 @@
             wizard: { name: { fa: 'جادوگر', en: 'Wizard' }, emoji: '🧙', price: 550 },
             ninja: { name: { fa: 'نینجا', en: 'Ninja' }, emoji: '🥷', price: 450 },
             cowboy: { name: { fa: 'کابوی', en: 'Cowboy' }, emoji: '🤠', price: 400 },
-            crown2: { name: { fa: 'الماس', en: 'Diamond' }, emoji: '💎', price: 1000 }
+            diamond: { name: { fa: 'الماس', en: 'Diamond' }, emoji: '💎', price: 1000 }
         };
 
         // ============================================
@@ -973,7 +624,7 @@
         // ============================================
         // STAGES - 10 stages
         // ============================================
-                const STAGES = [
+        const STAGES = [
             { bg1: '#0a0a1e', bg2: '#1a1a3e', ground: '#00f0ff', accent: '#00f0ff', speed: 3.0, gap: 150, difficulty: 1, icon: '🌱', name: { fa: 'شروع', en: 'Start' } },
             { bg1: '#0a1a1e', bg2: '#1a2e3e', ground: '#4dd0e1', accent: '#4dd0e1', speed: 3.3, gap: 140, difficulty: 1, icon: '💧', name: { fa: 'شهر آبی', en: 'Blue City' } },
             { bg1: '#1e0a1e', bg2: '#3e1a3e', ground: '#ff2e97', accent: '#ff2e97', speed: 3.6, gap: 130, difficulty: 2, icon: '🌸', name: { fa: 'منطقه صورتی', en: 'Pink Zone' } },
@@ -986,7 +637,7 @@
             { bg1: '#0a0a0a', bg2: '#1a0a1a', ground: '#ffffff', accent: '#ffffff', speed: 5.8, gap: 82, difficulty: 5, icon: '🕳️', name: { fa: 'سیاه‌چاله', en: 'Black Hole' } }
         ];
 
-                // ============================================
+        // ============================================
         // GAME STATE
         // ============================================
         const canvas = document.getElementById('gameCanvas');
@@ -1007,12 +658,10 @@
             score: 0,
             coins: 0,
             stage: 1,
-            speed: 3.5,
+            speed: 3.0,
             gravity: 0.5,
             jumpForce: -15,
             groundY: 0,
-            stageStartScore: 0,
-            stageMaxScore: 0,
             player: { x: 100, y: 0, size: 40, vy: 0, rotation: 0, onGround: true },
             obstacles: [],
             coinItems: [],
@@ -1108,7 +757,7 @@
                 const progress = gameData.stageProgress[stageNum] || 0;
 
                 const row = document.createElement('div');
-                row.className = 'stage-row unlocked';
+                row.className = 'stage-row';
                 row.style.cursor = 'pointer';
 
                 let starsHTML = '';
@@ -1135,81 +784,7 @@
                     ${percentHTML}
                 `;
 
-                row.onclick = () => startStageFromMenu(stageNum);
-                list.appendChild(row);
-            });
-        }
-
-        function startStageFromMenu(stageNum) {
-            // Save starting stage
-            gameData.startStage = stageNum;
-            saveData();
-            startGameFromStage(stageNum);
-        }
-
-        function startGameFromStage(stageNum) {
-            initAudio();
-            showScreen(null);
-            showHUD(true);
-
-            game.running = true;
-            game.over = false;
-            game.paused = false;
-            // Start from the score of this stage
-            game.score = (stageNum - 1) * 60;
-            game.coins = 0;
-            game.stage = stageNum;
-            game.stageStartScore = (stageNum - 1) * 60;
-            game.obstacles = [];
-            game.coinItems = [];
-            game.particles = [];
-            game.spawnTimer = 0;
-            game.coinSpawnTimer = 0;
-            game.frameCount = 0;
-            game.groundParticles = [];
-
-            const theme = getStageTheme();
-            game.speed = theme.speed;
-
-            game.groundY = H - 80;
-            game.player.x = 100;
-            game.player.y = game.groundY - game.player.size;
-            game.player.vy = 0;
-            game.player.rotation = 0;
-            game.player.onGround = true;
-
-            updateHUD();
-            gameLoop();
-        }
-
-                // Difficulty stars
-                let starsHTML = '';
-                for (let i = 1; i <= 5; i++) {
-                    starsHTML += `<span class="diff-star ${i <= stage.difficulty ? 'filled' : ''}">★</span>`;
-                }
-
-                // Percent
-                let percentHTML;
-                if (!unlocked) {
-                    percentHTML = `<div class="stage-percent locked-text">🔒</div>`;
-                } else if (progress >= 100) {
-                    percentHTML = `<div class="stage-percent complete">100%</div>`;
-                } else {
-                    percentHTML = `<div class="stage-percent">${progress}%</div>`;
-                }
-
-                row.innerHTML = `
-                    <div class="stage-icon">${unlocked ? stage.icon : '🔒'}</div>
-                    <div class="stage-info">
-                        <div class="stage-name">${stageNum}. ${stage.name[currentLang]}</div>
-                        <div class="stage-diff">${starsHTML}</div>
-                        <div class="stage-progress-bar">
-                            <div class="stage-progress-bar-fill" style="width: ${progress}%"></div>
-                        </div>
-                    </div>
-                    ${percentHTML}
-                `;
-
+                row.onclick = () => startGameFromStage(stageNum);
                 list.appendChild(row);
             });
         }
@@ -1479,6 +1054,10 @@
         // GAME START
         // ============================================
         function startGame() {
+            startGameFromStage(1);
+        }
+
+        function startGameFromStage(stageNum) {
             initAudio();
             showScreen(null);
             showHUD(true);
@@ -1486,10 +1065,9 @@
             game.running = true;
             game.over = false;
             game.paused = false;
-            game.score = 0;
+            game.score = (stageNum - 1) * 60;
             game.coins = 0;
-            game.stage = 1;
-            game.stageStartScore = 0;
+            game.stage = stageNum;
             game.obstacles = [];
             game.coinItems = [];
             game.particles = [];
@@ -1523,23 +1101,17 @@
             if (game.over) return;
             game.frameCount++;
 
-            // Stage detection — each stage is 30 points
-                 const newStage = Math.min(Math.floor(game.score / 60) + 1, 10);
+            const newStage = Math.min(Math.floor(game.score / 60) + 1, 10);
 
             if (newStage !== game.stage) {
-                // Save current stage progress before changing
                 saveStageProgress(game.stage, 100);
-
                 game.stage = newStage;
-                game.stageStartScore = (newStage - 1) * 60;
                 const theme = getStageTheme();
                 game.speed = theme.speed;
                 onStageChange();
             }
 
-            // Update stage progress in real-time
             updateStageProgress();
-
             updatePlayer();
             updateObstacles();
             updateCoins();
@@ -1579,21 +1151,15 @@
             const startScore = (stageNum - 1) * 60;
             const currentStageScore = game.score - startScore;
             const percent = Math.min(Math.floor((currentStageScore / 60) * 100), 100);
-            
+
             const existing = gameData.stageProgress[stageNum] || 0;
-            if (percent > existing) {
-                gameData.stageProgress[stageNum] = percent;
-            }
+            if (percent > existing) gameData.stageProgress[stageNum] = percent;
         }
 
         function saveStageProgress(stageNum, percent) {
             const existing = gameData.stageProgress[stageNum] || 0;
-            if (percent > existing) {
-                gameData.stageProgress[stageNum] = percent;
-            }
-            if (stageNum > (gameData.maxStageReached || 1)) {
-                gameData.maxStageReached = stageNum;
-            }
+            if (percent > existing) gameData.stageProgress[stageNum] = percent;
+            if (stageNum > (gameData.maxStageReached || 1)) gameData.maxStageReached = stageNum;
             saveData();
         }
 
@@ -1673,7 +1239,7 @@
         function spawnObstacle() {
             const stage = game.stage;
             let types = ['box'];
-            
+
             if (stage >= 2) types.push('triangle');
             if (stage >= 3) types.push('double');
             if (stage >= 4) types.push('tall');
@@ -1681,7 +1247,6 @@
             if (stage >= 8) types.push('spike');
 
             const type = types[Math.floor(Math.random() * types.length)];
-
             let obs = { x: W + 20, width: 40, height: 40, y: game.groundY - 40, type };
 
             if (type === 'triangle') { obs.width = 40; obs.height = 50; obs.y = game.groundY - 50; }
@@ -2106,9 +1671,7 @@
             if (game.score > gameData.bestScore) gameData.bestScore = game.score;
             gameData.totalGames++;
 
-            // Save current stage progress
             saveStageProgress(game.stage, Math.min(Math.floor(((game.score % 60) / 60) * 100), 100));
-
             saveData();
 
             document.getElementById('gameoverScore').textContent = game.score;
@@ -2162,7 +1725,6 @@
             applyLanguage();
             updateMenu();
         });
-
     </script>
 </body>
 </html>
