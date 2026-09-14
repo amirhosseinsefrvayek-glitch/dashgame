@@ -973,17 +973,17 @@
         // ============================================
         // STAGES - 10 stages
         // ============================================
-        const STAGES = [
-            { bg1: '#0a0a1e', bg2: '#1a1a3e', ground: '#00f0ff', accent: '#00f0ff', speed: 3.5, gap: 140, difficulty: 1, icon: '🌱', name: { fa: 'شروع', en: 'Start' } },
-            { bg1: '#0a1a1e', bg2: '#1a2e3e', ground: '#4dd0e1', accent: '#4dd0e1', speed: 4.0, gap: 130, difficulty: 1, icon: '💧', name: { fa: 'شهر آبی', en: 'Blue City' } },
-            { bg1: '#1e0a1e', bg2: '#3e1a3e', ground: '#ff2e97', accent: '#ff2e97', speed: 4.5, gap: 120, difficulty: 2, icon: '🌸', name: { fa: 'منطقه صورتی', en: 'Pink Zone' } },
-            { bg1: '#0a1e1e', bg2: '#1a3e3e', ground: '#06ffa5', accent: '#06ffa5', speed: 5.0, gap: 110, difficulty: 2, icon: '🌿', name: { fa: 'ماتریکسی', en: 'Matrix' } },
-            { bg1: '#1e1e0a', bg2: '#3e3e1a', ground: '#ffd60a', accent: '#ffd60a', speed: 5.5, gap: 100, difficulty: 3, icon: '⭐', name: { fa: 'طلایی', en: 'Golden' } },
-            { bg1: '#1e0a1e', bg2: '#3e0a3e', ground: '#b537f2', accent: '#b537f2', speed: 6.0, gap: 92, difficulty: 3, icon: '🔮', name: { fa: 'بنفش', en: 'Purple' } },
-            { bg1: '#1e0a0a', bg2: '#3e1a1a', ground: '#ff3860', accent: '#ff3860', speed: 6.5, gap: 84, difficulty: 4, icon: '🔥', name: { fa: 'آتشین', en: 'Fire Red' } },
-            { bg1: '#0a1e0a', bg2: '#1a3e1a', ground: '#10b981', accent: '#10b981', speed: 7.0, gap: 76, difficulty: 4, icon: '🌲', name: { fa: 'جنگل', en: 'Forest' } },
-            { bg1: '#1e0a0a', bg2: '#4a0000', ground: '#ff0000', accent: '#ff0000', speed: 7.5, gap: 68, difficulty: 5, icon: '💀', name: { fa: 'جهنم', en: 'Inferno' } },
-            { bg1: '#0a0a0a', bg2: '#1a0a1a', ground: '#ffffff', accent: '#ffffff', speed: 8.5, gap: 60, difficulty: 5, icon: '🕳️', name: { fa: 'سیاه‌چاله', en: 'Black Hole' } }
+                const STAGES = [
+            { bg1: '#0a0a1e', bg2: '#1a1a3e', ground: '#00f0ff', accent: '#00f0ff', speed: 3.0, gap: 150, difficulty: 1, icon: '🌱', name: { fa: 'شروع', en: 'Start' } },
+            { bg1: '#0a1a1e', bg2: '#1a2e3e', ground: '#4dd0e1', accent: '#4dd0e1', speed: 3.3, gap: 140, difficulty: 1, icon: '💧', name: { fa: 'شهر آبی', en: 'Blue City' } },
+            { bg1: '#1e0a1e', bg2: '#3e1a3e', ground: '#ff2e97', accent: '#ff2e97', speed: 3.6, gap: 130, difficulty: 2, icon: '🌸', name: { fa: 'منطقه صورتی', en: 'Pink Zone' } },
+            { bg1: '#0a1e1e', bg2: '#1a3e3e', ground: '#06ffa5', accent: '#06ffa5', speed: 3.9, gap: 122, difficulty: 2, icon: '🌿', name: { fa: 'ماتریکسی', en: 'Matrix' } },
+            { bg1: '#1e1e0a', bg2: '#3e3e1a', ground: '#ffd60a', accent: '#ffd60a', speed: 4.2, gap: 115, difficulty: 3, icon: '⭐', name: { fa: 'طلایی', en: 'Golden' } },
+            { bg1: '#1e0a1e', bg2: '#3e0a3e', ground: '#b537f2', accent: '#b537f2', speed: 4.5, gap: 108, difficulty: 3, icon: '🔮', name: { fa: 'بنفش', en: 'Purple' } },
+            { bg1: '#1e0a0a', bg2: '#3e1a1a', ground: '#ff3860', accent: '#ff3860', speed: 4.8, gap: 100, difficulty: 4, icon: '🔥', name: { fa: 'آتشین', en: 'Fire Red' } },
+            { bg1: '#0a1e0a', bg2: '#1a3e1a', ground: '#10b981', accent: '#10b981', speed: 5.1, gap: 94, difficulty: 4, icon: '🌲', name: { fa: 'جنگل', en: 'Forest' } },
+            { bg1: '#1e0a0a', bg2: '#4a0000', ground: '#ff0000', accent: '#ff0000', speed: 5.4, gap: 88, difficulty: 5, icon: '💀', name: { fa: 'جهنم', en: 'Inferno' } },
+            { bg1: '#0a0a0a', bg2: '#1a0a1a', ground: '#ffffff', accent: '#ffffff', speed: 5.8, gap: 82, difficulty: 5, icon: '🕳️', name: { fa: 'سیاه‌چاله', en: 'Black Hole' } }
         ];
 
                 // ============================================
@@ -1105,11 +1105,82 @@
 
             STAGES.forEach((stage, idx) => {
                 const stageNum = idx + 1;
-                const unlocked = stageNum <= (gameData.maxStageReached || 1);
                 const progress = gameData.stageProgress[stageNum] || 0;
 
                 const row = document.createElement('div');
-                row.className = 'stage-row ' + (unlocked ? 'unlocked' : 'locked');
+                row.className = 'stage-row unlocked';
+                row.style.cursor = 'pointer';
+
+                let starsHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    starsHTML += `<span class="diff-star ${i <= stage.difficulty ? 'filled' : ''}">★</span>`;
+                }
+
+                let percentHTML;
+                if (progress >= 100) {
+                    percentHTML = `<div class="stage-percent complete">100%</div>`;
+                } else {
+                    percentHTML = `<div class="stage-percent">${progress}%</div>`;
+                }
+
+                row.innerHTML = `
+                    <div class="stage-icon">${stage.icon}</div>
+                    <div class="stage-info">
+                        <div class="stage-name">${stageNum}. ${stage.name[currentLang]}</div>
+                        <div class="stage-diff">${starsHTML}</div>
+                        <div class="stage-progress-bar">
+                            <div class="stage-progress-bar-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                    ${percentHTML}
+                `;
+
+                row.onclick = () => startStageFromMenu(stageNum);
+                list.appendChild(row);
+            });
+        }
+
+        function startStageFromMenu(stageNum) {
+            // Save starting stage
+            gameData.startStage = stageNum;
+            saveData();
+            startGameFromStage(stageNum);
+        }
+
+        function startGameFromStage(stageNum) {
+            initAudio();
+            showScreen(null);
+            showHUD(true);
+
+            game.running = true;
+            game.over = false;
+            game.paused = false;
+            // Start from the score of this stage
+            game.score = (stageNum - 1) * 60;
+            game.coins = 0;
+            game.stage = stageNum;
+            game.stageStartScore = (stageNum - 1) * 60;
+            game.obstacles = [];
+            game.coinItems = [];
+            game.particles = [];
+            game.spawnTimer = 0;
+            game.coinSpawnTimer = 0;
+            game.frameCount = 0;
+            game.groundParticles = [];
+
+            const theme = getStageTheme();
+            game.speed = theme.speed;
+
+            game.groundY = H - 80;
+            game.player.x = 100;
+            game.player.y = game.groundY - game.player.size;
+            game.player.vy = 0;
+            game.player.rotation = 0;
+            game.player.onGround = true;
+
+            updateHUD();
+            gameLoop();
+        }
 
                 // Difficulty stars
                 let starsHTML = '';
@@ -1453,14 +1524,14 @@
             game.frameCount++;
 
             // Stage detection — each stage is 30 points
-            const newStage = Math.min(Math.floor(game.score / 30) + 1, 10);
+                 const newStage = Math.min(Math.floor(game.score / 60) + 1, 10);
 
             if (newStage !== game.stage) {
                 // Save current stage progress before changing
                 saveStageProgress(game.stage, 100);
 
                 game.stage = newStage;
-                game.stageStartScore = (newStage - 1) * 30;
+                game.stageStartScore = (newStage - 1) * 60;
                 const theme = getStageTheme();
                 game.speed = theme.speed;
                 onStageChange();
@@ -1505,9 +1576,9 @@
 
         function updateStageProgress() {
             const stageNum = game.stage;
-            const startScore = (stageNum - 1) * 30;
+            const startScore = (stageNum - 1) * 60;
             const currentStageScore = game.score - startScore;
-            const percent = Math.min(Math.floor((currentStageScore / 30) * 100), 100);
+            const percent = Math.min(Math.floor((currentStageScore / 60) * 100), 100);
             
             const existing = gameData.stageProgress[stageNum] || 0;
             if (percent > existing) {
@@ -1705,7 +1776,7 @@
             document.getElementById('hudScore').textContent = game.score;
             document.getElementById('hudCoins').textContent = game.coins;
             document.getElementById('hudStage').textContent = Math.min(game.stage, 10) + '/10';
-            const progress = ((game.score % 30) / 30) * 100;
+            const progress = ((game.score % 60) / 60) * 100;
             document.getElementById('stageProgress').style.width = progress + '%';
         }
 
@@ -2036,7 +2107,7 @@
             gameData.totalGames++;
 
             // Save current stage progress
-            saveStageProgress(game.stage, Math.min(Math.floor(((game.score % 30) / 30) * 100), 100));
+            saveStageProgress(game.stage, Math.min(Math.floor(((game.score % 60) / 60) * 100), 100));
 
             saveData();
 
