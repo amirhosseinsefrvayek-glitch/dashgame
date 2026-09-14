@@ -804,17 +804,17 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let game = {
+          let game = {
             running: false,
             over: false,
             paused: false,
             score: 0,
             coins: 0,
             stage: 1,
-            speed: 6,
-            baseSpeed: 6,
-            gravity: 0.8,
-            jumpForce: -13,
+            speed: 4,
+            baseSpeed: 4,
+            gravity: 0.5,
+            jumpForce: -15,
             groundY: 0,
             player: { x: 100, y: 0, size: 40, vy: 0, rotation: 0, onGround: true },
             obstacles: [],
@@ -1181,7 +1181,7 @@
             game.coinItems = [];
             game.particles = [];
             game.spawnTimer = 0;
-            game.spawnInterval = 90;
+            game.spawnInterval = 120;
             game.coinSpawnTimer = 0;
             game.coinSpawnInterval = 60;
             game.frameCount = 0;
@@ -1208,7 +1208,7 @@
         function update() {
             if (game.over) return;
             game.frameCount++;
-            game.speed += 0.001;
+            game.speed += 0.0005;
 
             const newStage = Math.floor(game.score / 80) + 1;
             if (newStage !== game.stage) {
@@ -1225,7 +1225,7 @@
             if (game.spawnTimer >= game.spawnInterval) {
                 game.spawnTimer = 0;
                 spawnObstacle();
-                if (game.spawnInterval > 45) game.spawnInterval -= 0.5;
+                if (game.spawnInterval > 70) game.spawnInterval -= 0.3;
             }
 
             game.coinSpawnTimer++;
