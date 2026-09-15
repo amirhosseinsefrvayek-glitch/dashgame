@@ -9,6 +9,8 @@
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#05060f;font-family:'Orbitron',sans-serif;color:#fff;position:fixed}
 canvas{display:block;position:fixed;inset:0;z-index:1}
+
+/* HUD */
 .hud{position:fixed;inset:0;z-index:10;pointer-events:none;display:none}
 .hud.on{display:block}
 .top{position:absolute;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:10px}
@@ -21,8 +23,12 @@ canvas{display:block;position:fixed;inset:0;z-index:1}
 .pbar{position:absolute;top:80px;left:50%;transform:translateX(-50%);width:240px;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
 .pfill{height:100%;width:0%;background:linear-gradient(90deg,#00f0ff,#b537f2);transition:width .2s;box-shadow:0 0 12px #00f0ff}
 .pause{position:absolute;top:15px;right:15px;width:44px;height:44px;background:rgba(10,10,25,.75);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-size:20px;cursor:pointer;pointer-events:auto}
+
+/* Screens */
 .screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;z-index:20;background:rgba(5,6,15,.95);backdrop-filter:blur(20px);overflow-y:auto}
 .screen.on{display:flex}
+
+/* Menu */
 .title{font-size:64px;font-weight:900;letter-spacing:6px;background:linear-gradient(135deg,#00f0ff,#b537f2,#ff2e97);background-size:200% 200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:g 3s infinite;text-align:center;margin-bottom:8px}
 @keyframes g{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .tag{font-size:12px;letter-spacing:8px;color:#6b6b8f;margin-bottom:30px}
@@ -30,19 +36,26 @@ canvas{display:block;position:fixed;inset:0;z-index:1}
 .stat{background:rgba(10,10,25,.75);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 8px;text-align:center}
 .stat .v{font-size:24px;font-weight:900;background:linear-gradient(135deg,#00f0ff,#b537f2);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:4px}
 .stat .l{font-size:9px;color:#6b6b8f;letter-spacing:2px}
-.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:560px;width:100%;margin-bottom:22px}
-.lvl{aspect-ratio:1;background:rgba(10,10,25,.75);border:2px solid rgba(255,255,255,.1);border-radius:14px;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;position:relative;overflow:hidden}
+
+/* LEVELS — with names */
+.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:700px;width:100%;margin-bottom:22px}
+.lvl{aspect-ratio:1;background:rgba(10,10,25,.75);border:2px solid rgba(255,255,255,.1);border-radius:14px;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px;position:relative;overflow:hidden}
 .lvl:hover{transform:translateY(-4px) scale(1.05);border-color:#00f0ff;box-shadow:0 8px 25px rgba(0,240,255,.3)}
-.lvl .ic{font-size:22px}
-.lvl .nm{font-size:9px;color:#9a9ab5;font-weight:700;text-align:center;line-height:1.1}
-.lvl .pr{position:absolute;bottom:2px;left:2px;right:2px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
-.lvl .pr b{display:block;height:100%;background:linear-gradient(90deg,#00f0ff,#b537f2)}
+.lvl .ic{font-size:24px;line-height:1}
+.lvl .num{font-size:11px;font-weight:900;color:#00f0ff;letter-spacing:1px}
+.lvl .nm{font-size:8px;color:#9a9ab5;font-weight:700;text-align:center;line-height:1.1;letter-spacing:.5px}
+.lvl .pr{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.08)}
+.lvl .pr b{display:block;height:100%;background:linear-gradient(90deg,#00f0ff,#b537f2);transition:width .5s}
 .lvl.done{border-color:#06ffa5;background:rgba(6,255,165,.08)}
+
+/* Buttons */
 .btns{display:flex;flex-direction:column;gap:10px;max-width:320px;width:100%}
 .btn{padding:16px 28px;background:linear-gradient(135deg,#00f0ff,#b537f2);color:#fff;border:none;border-radius:14px;font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .3s;box-shadow:0 8px 25px rgba(0,240,255,.3)}
 .btn:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(0,240,255,.5)}
 .btn.sec{background:rgba(10,10,25,.75);border:1px solid rgba(255,255,255,.1);box-shadow:none}
 .btn.sec:hover{border-color:#00f0ff;color:#00f0ff}
+
+/* Shop */
 .shop-t{font-size:32px;font-weight:900;letter-spacing:4px;background:linear-gradient(135deg,#00f0ff,#b537f2);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
 .shop-c{display:inline-flex;align-items:center;gap:8px;background:rgba(255,214,10,.1);border:1px solid #ffd60a;border-radius:20px;padding:8px 20px;font-size:18px;font-weight:900;color:#ffd60a;margin-bottom:18px}
 .tabs{display:flex;gap:6px;background:rgba(10,10,25,.75);padding:6px;border-radius:12px;margin-bottom:18px;max-width:520px;width:100%}
@@ -64,6 +77,8 @@ canvas{display:block;position:fixed;inset:0;z-index:1}
 .fo{width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all .2s}
 .fo:hover{border-color:#00f0ff;transform:scale(1.1)}
 .fo.on{border-color:#00f0ff;background:rgba(0,240,255,.15);box-shadow:0 0 15px rgba(0,240,255,.4)}
+
+/* Game Over / Win */
 .gover{text-align:center;max-width:400px;width:100%;background:rgba(10,10,25,.9);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:40px 30px}
 .gover .ic{font-size:70px;margin-bottom:15px}
 .gover .ti{font-size:30px;font-weight:900;letter-spacing:4px;color:#ff2e97;margin-bottom:25px}
@@ -71,18 +86,22 @@ canvas{display:block;position:fixed;inset:0;z-index:1}
 .gover .sr{display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,.03);border-radius:10px}
 .gover .sr .l{color:#6b6b8f;font-size:13px}
 .gover .sr .v{color:#00f0ff;font-size:18px;font-weight:900}
+
+/* Notif */
 .notif{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(10,10,25,.95);border:2px solid #b537f2;border-radius:20px;padding:28px 44px;z-index:50;text-align:center;box-shadow:0 0 60px rgba(181,55,242,.5);pointer-events:none;opacity:0;transition:all .5s cubic-bezier(.34,1.56,.64,1)}
 .notif.on{transform:translate(-50%,-50%) scale(1);opacity:1}
 .notif .ic{font-size:54px;margin-bottom:10px}
 .notif .ti{font-size:22px;font-weight:900;letter-spacing:3px;color:#b537f2}
 .notif .sb{font-size:14px;color:#9a9ab5;margin-top:4px}
+
 .ver{position:fixed;top:15px;left:50%;transform:translateX(-50%);font-size:9px;color:#4a4a6a;letter-spacing:4px;z-index:15;pointer-events:none}
 .cred{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);font-size:11px;color:#4a4a6a;letter-spacing:1px;z-index:15}
 .cred a{color:#00f0ff;text-decoration:none;font-weight:700}
 .cred a:hover{text-decoration:underline}
-@media(max-width:600px){
+
+@media(max-width:700px){
     .title{font-size:40px;letter-spacing:3px}
-    .levels{grid-template-columns:repeat(4,1fr)}
+    .levels{grid-template-columns:repeat(3,1fr)}
     .grid{grid-template-columns:repeat(2,1fr)}
     .val{font-size:16px!important}
     .pbar{width:180px}
@@ -104,12 +123,12 @@ canvas{display:block;position:fixed;inset:0;z-index:1}
     <button class="pause" onclick="pause()">⏸</button>
 </div>
 
-<div class="ver">NEON DASH — V3.0</div>
+<div class="ver">NEON DASH — V4.0</div>
 <div class="cred">Create by <a href="https://amirhosseinsefrvayek-glitch.github.io/Myresume/" target="_blank">Amirhossein Hosseinzadeh</a></div>
 
 <div class="notif" id="notif">
     <div class="ic" id="nIc">🌱</div>
-    <div class="ti" id="nTi">STAGE 1</div>
+    <div class="ti" id="nTi">LEVEL 1</div>
     <div class="sb" id="nSb">FOREST</div>
 </div>
 
@@ -158,7 +177,7 @@ canvas{display:block;position:fixed;inset:0;z-index:1}
     </div>
 </div>
 
-<!-- LEVEL COMPLETE -->
+<!-- WIN -->
 <div class="screen" id="scrWin">
     <div class="gover">
         <div class="ic">🏆</div>
@@ -176,10 +195,10 @@ canvas{display:block;position:fixed;inset:0;z-index:1}
 </div>
 
 <script>
-// ============================================
+// ============================================================
 // DATA
-// ============================================
-let G = JSON.parse(localStorage.getItem('nd3') || 'null') || {
+// ============================================================
+let G = JSON.parse(localStorage.getItem('nd4') || 'null') || {
     best: 0, coins: 0,
     ownColors: ['cyan'], ownChars: ['default'],
     eqColor: 'cyan', eqChar: 'default',
@@ -189,8 +208,11 @@ let G = JSON.parse(localStorage.getItem('nd3') || 'null') || {
 if (!G.face) G.face = { eye: 'normal', mouth: 'smile', body: 'auto' };
 if (!G.progress) G.progress = {};
 if (!G.completed) G.completed = {};
-function save() { localStorage.setItem('nd3', JSON.stringify(G)); }
+function save() { localStorage.setItem('nd4', JSON.stringify(G)); }
 
+// ============================================================
+// COLORS
+// ============================================================
 const COLORS = {
     cyan:{n:'Cyan',p:'#00f0ff',s:'#0099cc',price:0},
     purple:{n:'Purple',p:'#b537f2',s:'#7c1fa8',price:50},
@@ -229,11 +251,11 @@ const CHARS = {
 const EYES = {normal:'👁️',happy:'😊',angry:'😠',cool:'😎',wink:'😉',heart:'😍',star:'🤩',dead:'😵'};
 const MOUTHS = {smile:'😊',neutral:'😐',sad:'😢',open:'😮',laugh:'😂',tongue:'😛',kiss:'😘',fire:'🔥'};
 
-// ============================================
-// 10 LEVELS — Each 590 points, changes color every 30
-// ============================================
+// ============================================================
+// 10 LEVELS — HIGH SPEED
+// ============================================================
 const LEVELS = [
-    { num:1,  name:'FOREST',   ic:'🌱', speed:4.5, gap:150, patterns:['single'], diff:1,
+    { num:1,  name:'FOREST',   ic:'🌱', speed:7.5,  gap:110, patterns:['single','triangle'], diff:1,
       themes:[
         {bg1:'#0a1a0a',bg2:'#1a3a1a',g:'#06ffa5',a:'#06ffa5'},
         {bg1:'#0a2a1a',bg2:'#1a4a2a',g:'#10b981',a:'#10b981'},
@@ -241,7 +263,7 @@ const LEVELS = [
         {bg1:'#0a1a1a',bg2:'#1a3a3a',g:'#14b8a6',a:'#14b8a6'},
         {bg1:'#1a0a1a',bg2:'#3a1a3a',g:'#22c55e',a:'#22c55e'}
       ]},
-    { num:2,  name:'OCEAN',    ic:'💧', speed:4.9, gap:140, patterns:['single','double'], diff:1,
+    { num:2,  name:'OCEAN',    ic:'💧', speed:8.0,  gap:105, patterns:['single','double','triangle'], diff:1,
       themes:[
         {bg1:'#0a0a2e',bg2:'#0a1a4a',g:'#00d9ff',a:'#00d9ff'},
         {bg1:'#0a1a3e',bg2:'#0a2a5a',g:'#38bdf8',a:'#38bdf8'},
@@ -249,7 +271,7 @@ const LEVELS = [
         {bg1:'#1a0a3e',bg2:'#2a1a5a',g:'#60a5fa',a:'#60a5fa'},
         {bg1:'#0a1a4e',bg2:'#1a2a6a',g:'#0ea5e9',a:'#0ea5e9'}
       ]},
-    { num:3,  name:'BLOSSOM',  ic:'🌸', speed:5.3, gap:130, patterns:['single','double','triangle'], diff:2,
+    { num:3,  name:'BLOSSOM',  ic:'🌸', speed:8.5,  gap:100, patterns:['single','double','triangle','stairs'], diff:2,
       themes:[
         {bg1:'#2e0a1e',bg2:'#4a1a3e',g:'#ff6bcb',a:'#ff6bcb'},
         {bg1:'#3e0a2e',bg2:'#5a1a4e',g:'#f472b6',a:'#f472b6'},
@@ -257,7 +279,7 @@ const LEVELS = [
         {bg1:'#2e0a3e',bg2:'#4a1a5e',g:'#d946ef',a:'#d946ef'},
         {bg1:'#3e0a1e',bg2:'#5a1a3e',g:'#e879f9',a:'#e879f9'}
       ]},
-    { num:4,  name:'GALAXY',   ic:'⭐', speed:5.7, gap:122, patterns:['single','triangle','stairs'], diff:2,
+    { num:4,  name:'GALAXY',   ic:'⭐', speed:9.0,  gap:95,  patterns:['single','triangle','stairs','floating'], diff:2,
       themes:[
         {bg1:'#1e0a2e',bg2:'#3a0a4a',g:'#b537f2',a:'#b537f2'},
         {bg1:'#2e0a4e',bg2:'#4a0a6a',g:'#a855f7',a:'#a855f7'},
@@ -265,7 +287,7 @@ const LEVELS = [
         {bg1:'#2a0a3e',bg2:'#4a0a5e',g:'#c084fc',a:'#c084fc'},
         {bg1:'#3e0a2e',bg2:'#5e0a4e',g:'#e9d5ff',a:'#e9d5ff'}
       ]},
-    { num:5,  name:'INFERNO',  ic:'🔥', speed:6.1, gap:114, patterns:['single','double','stairs','wall'], diff:3,
+    { num:5,  name:'INFERNO',  ic:'🔥', speed:9.5,  gap:90,  patterns:['single','double','stairs','wall','combo'], diff:3,
       themes:[
         {bg1:'#2e0a0a',bg2:'#4a1a0a',g:'#ff4500',a:'#ff8c00'},
         {bg1:'#3e0a0a',bg2:'#5a1a0a',g:'#ff6b00',a:'#ffaa00'},
@@ -273,7 +295,7 @@ const LEVELS = [
         {bg1:'#3e1a0a',bg2:'#5a2a0a',g:'#f97316',a:'#fbbf24'},
         {bg1:'#2e0a1a',bg2:'#4a1a2a',g:'#dc2626',a:'#f43f5e'}
       ]},
-    { num:6,  name:'ICE',      ic:'❄️', speed:6.5, gap:108, patterns:['single','stairs','wall','floating'], diff:3,
+    { num:6,  name:'ICE',      ic:'❄️', speed:10.0, gap:86,  patterns:['single','stairs','wall','floating','combo'], diff:3,
       themes:[
         {bg1:'#0a1e2e',bg2:'#1a3a5a',g:'#a8e6ff',a:'#ffffff'},
         {bg1:'#0a2a3e',bg2:'#1a4a5e',g:'#7dd3fc',a:'#e0f2fe'},
@@ -281,7 +303,7 @@ const LEVELS = [
         {bg1:'#1a2a4e',bg2:'#2a3a6e',g:'#67e8f9',a:'#cffafe'},
         {bg1:'#0a2a5e',bg2:'#1a3a7e',g:'#06b6d4',a:'#a5f3fc'}
       ]},
-    { num:7,  name:'DESERT',   ic:'🏜️', speed:6.9, gap:102, patterns:['double','stairs','wall','floating'], diff:4,
+    { num:7,  name:'DESERT',   ic:'🏜️', speed:10.5, gap:82,  patterns:['double','stairs','wall','floating','combo'], diff:4,
       themes:[
         {bg1:'#2e1e0a',bg2:'#4a3a1a',g:'#ffd60a',a:'#ff8c42'},
         {bg1:'#3e2e0a',bg2:'#5a4a1a',g:'#fbbf24',a:'#f59e0b'},
@@ -289,7 +311,7 @@ const LEVELS = [
         {bg1:'#3e2a0a',bg2:'#5a4a0a',g:'#f59e0b',a:'#b45309'},
         {bg1:'#2e1a0a',bg2:'#4a3a0a',g:'#fbbf24',a:'#ea580c'}
       ]},
-    { num:8,  name:'DARK',     ic:'🌲', speed:7.3, gap:96,  patterns:['single','double','stairs','wall','floating','combo'], diff:4,
+    { num:8,  name:'DARK',     ic:'🌲', speed:11.0, gap:78,  patterns:['single','double','stairs','wall','floating','combo'], diff:4,
       themes:[
         {bg1:'#051005',bg2:'#0a1a0a',g:'#10b981',a:'#059669'},
         {bg1:'#0a100a',bg2:'#1a201a',g:'#059669',a:'#047857'},
@@ -297,7 +319,7 @@ const LEVELS = [
         {bg1:'#050a10',bg2:'#0a1a2a',g:'#0891b2',a:'#0e7490'},
         {bg1:'#100510',bg2:'#200a20',g:'#7c3aed',a:'#5b21b6'}
       ]},
-    { num:9,  name:'HELL',     ic:'💀', speed:7.7, gap:92,  patterns:['double','stairs','wall','floating','combo'], diff:5,
+    { num:9,  name:'HELL',     ic:'💀', speed:11.5, gap:74,  patterns:['double','stairs','wall','floating','combo'], diff:5,
       themes:[
         {bg1:'#1a0000',bg2:'#3a0000',g:'#ff0000',a:'#ff4444'},
         {bg1:'#2a0000',bg2:'#4a0000',g:'#dc2626',a:'#ef4444'},
@@ -305,7 +327,7 @@ const LEVELS = [
         {bg1:'#1a0a00',bg2:'#3a1a00',g:'#ea580c',a:'#fb923c'},
         {bg1:'#2a0a0a',bg2:'#4a0a0a',g:'#f43f5e',a:'#fda4af'}
       ]},
-    { num:10, name:'VOID',     ic:'🕳️', speed:8.2, gap:88,  patterns:['stairs','wall','floating','combo'], diff:5,
+    { num:10, name:'VOID',     ic:'🕳️', speed:12.0, gap:70,  patterns:['stairs','wall','floating','combo'], diff:5,
       themes:[
         {bg1:'#000000',bg2:'#1a0a1a',g:'#ffffff',a:'#b537f2'},
         {bg1:'#0a0a0a',bg2:'#1a1a1a',g:'#e5e7eb',a:'#a855f7'},
@@ -315,20 +337,20 @@ const LEVELS = [
       ]}
 ];
 
-const LEVEL_TARGET = 590; // هر لول ۵۹۰ امتیاز
+const LEVEL_TARGET = 590;
 
-// ============================================
+// ============================================================
 // CANVAS
-// ============================================
+// ============================================================
 const cv = document.getElementById('cv');
 const cx = cv.getContext('2d');
 let W,H;
 function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}
 addEventListener('resize',resize);resize();
 
-// ============================================
+// ============================================================
 // AUDIO
-// ============================================
+// ============================================================
 let AC=null;
 function initAudio(){if(!AC)try{AC=new(AudioContext||webkitAudioContext)()}catch(e){}}
 function beep(f,d,t='sine',v=0.08){
@@ -342,13 +364,13 @@ function beep(f,d,t='sine',v=0.08){
     }catch(e){}
 }
 
-// ============================================
+// ============================================================
 // STATE
-// ============================================
+// ============================================================
 let game = {
     on:false, over:false, paused:false, won:false,
     score:0, coins:0,
-    lvlIdx:0, colorIdx:0, speed:4.5, gravity:0.6, jumpF:-15,
+    lvlIdx:0, colorIdx:0, speed:7.5, gravity:0.7, jumpF:-16,
     groundY:0, frame:0,
     player:{x:100,y:0,size:42,vy:0,rot:0,onGround:true},
     obs:[], coinList:[], parts:[], lines:[],
@@ -363,9 +385,9 @@ function getColor(){
     return COLORS[G.eqColor] || COLORS.cyan;
 }
 
-// ============================================
+// ============================================================
 // UI
-// ============================================
+// ============================================================
 function showScreen(id){
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
     if(id)document.getElementById(id).classList.add('on');
@@ -389,7 +411,8 @@ function renderLevels(){
         el.className='lvl'+(done?' done':'');
         el.innerHTML=`
             <div class="ic">${lv.ic}</div>
-            <div class="nm">${lv.num}</div>
+            <div class="num">LEVEL ${lv.num}</div>
+            <div class="nm">${lv.name}</div>
             <div class="pr"><b style="width:${prog}%"></b></div>
         `;
         el.onclick=()=>startLevel(i);
@@ -397,9 +420,9 @@ function renderLevels(){
     });
 }
 
-// ============================================
+// ============================================================
 // SHOP
-// ============================================
+// ============================================================
 let shopTab='colors';
 function openShop(){document.getElementById('sCoins').textContent=G.coins;renderShop();showScreen('scrShop')}
 function closeShop(){showScreen('scrMenu');updateMenu()}
@@ -444,7 +467,6 @@ function renderShop(){
             g.appendChild(el);
         });
     } else {
-        // Eyes
         const eye=document.createElement('div');
         eye.className='fsec';
         let eh=`<div class="ft">EYES</div><div class="fopt">`;
@@ -454,7 +476,7 @@ function renderShop(){
         eh+='</div>';
         eye.innerHTML=eh;
         g.appendChild(eye);
-        // Mouth
+
         const mouth=document.createElement('div');
         mouth.className='fsec';
         let mh=`<div class="ft">MOUTH</div><div class="fopt">`;
@@ -464,7 +486,7 @@ function renderShop(){
         mh+='</div>';
         mouth.innerHTML=mh;
         g.appendChild(mouth);
-        // Body
+
         const body=document.createElement('div');
         body.className='fsec';
         let bh=`<div class="ft">BODY COLOR</div><div class="fopt">`;
@@ -482,10 +504,8 @@ function renderShop(){
 function setFace(t,v){G.face[t]=v;save();renderShop();beep(800,.06)}
 function buyColor(k){
     const c=COLORS[k];
-    if(G.ownColors.includes(k)){
-        G.eqColor=k;G.face.body='auto';
-        save();renderShop();beep(800,.08);
-    } else if(G.coins>=c.price){
+    if(G.ownColors.includes(k)){G.eqColor=k;G.face.body='auto';save();renderShop();beep(800,.08)}
+    else if(G.coins>=c.price){
         G.coins-=c.price;G.ownColors.push(k);G.eqColor=k;G.face.body='auto';
         save();document.getElementById('sCoins').textContent=G.coins;renderShop();
         beep(900,.1);setTimeout(()=>beep(1200,.1),80);
@@ -493,18 +513,17 @@ function buyColor(k){
 }
 function buyChar(k){
     const c=CHARS[k];
-    if(G.ownChars.includes(k)){
-        G.eqChar=k;save();renderShop();beep(800,.08);
-    } else if(G.coins>=c.price){
+    if(G.ownChars.includes(k)){G.eqChar=k;save();renderShop();beep(800,.08)}
+    else if(G.coins>=c.price){
         G.coins-=c.price;G.ownChars.push(k);G.eqChar=k;
         save();document.getElementById('sCoins').textContent=G.coins;renderShop();
         beep(900,.1);setTimeout(()=>beep(1200,.1),80);
     } else beep(200,.2,'sawtooth');
 }
 
-// ============================================
+// ============================================================
 // START
-// ============================================
+// ============================================================
 function startLevel(idx){
     initAudio();
     showScreen(null);
@@ -528,29 +547,23 @@ function startLevel(idx){
 }
 
 function retry(){startLevel(game.lvlIdx)}
-
 function nextLevel(){
-    if(game.lvlIdx<LEVELS.length-1){
-        startLevel(game.lvlIdx+1);
-    } else {
-        goMenu();
-    }
+    if(game.lvlIdx<LEVELS.length-1)startLevel(game.lvlIdx+1);
+    else goMenu();
 }
-
 function goMenu(){
     game.on=false;game.over=false;
     showScreen('scrMenu');updateMenu();showHUD(false);
 }
-
 function pause(){
     if(!game.on||game.over||game.won)return;
     game.paused=!game.paused;
     document.querySelector('.pause').textContent=game.paused?'▶':'⏸';
 }
 
-// ============================================
+// ============================================================
 // LOOP
-// ============================================
+// ============================================================
 function loop(){
     if(!game.on)return;
     if(!game.paused&&!game.over&&!game.won)update();
@@ -561,24 +574,14 @@ function loop(){
 function update(){
     game.frame++;
 
-    // Color change every 30 points within same level
-    const newColorIdx = Math.floor(game.score / 30) % getLvl().themes.length;
-    if(newColorIdx !== game.colorIdx){
-        game.colorIdx = newColorIdx;
-    }
+    const newColorIdx=Math.floor(game.score/30)%getLvl().themes.length;
+    if(newColorIdx!==game.colorIdx)game.colorIdx=newColorIdx;
 
-    // Progress save (of 590)
     const lv=getLvl();
     const prog=Math.min(Math.floor((game.score/LEVEL_TARGET)*100),100);
-    if(prog>(G.progress[lv.num]||0)){
-        G.progress[lv.num]=prog;
-    }
+    if(prog>(G.progress[lv.num]||0))G.progress[lv.num]=prog;
 
-    // Level complete!
-    if(game.score >= LEVEL_TARGET){
-        levelComplete();
-        return;
-    }
+    if(game.score>=LEVEL_TARGET){levelComplete();return}
 
     updatePlayer();
     updateObs();
@@ -586,29 +589,15 @@ function update(){
     updateParts();
 
     game.spawnT++;
-    if(game.spawnT>=lv.gap){
-        game.spawnT=0;
-        spawnPattern(lv);
-    }
+    if(game.spawnT>=lv.gap){game.spawnT=0;spawnPattern(lv)}
 
     game.coinT++;
-    if(game.coinT>=55){
-        game.coinT=0;
-        spawnCoin();
-    }
+    if(game.coinT>=50){game.coinT=0;spawnCoin()}
 
-    if(game.frame%4===0){
-        game.score++;
-        updateHUD();
-    }
+    if(game.frame%3===0){game.score++;updateHUD()}
 
-    if(game.frame%2===0){
-        game.lines.push({x:W,life:1});
-    }
-    game.lines.forEach((l,i)=>{
-        l.x-=game.speed;l.life-=.03;
-        if(l.life<=0)game.lines.splice(i,1);
-    });
+    if(game.frame%2===0)game.lines.push({x:W,life:1});
+    game.lines.forEach((l,i)=>{l.x-=game.speed;l.life-=.03;if(l.life<=0)game.lines.splice(i,1)});
 }
 
 function updatePlayer(){
@@ -617,10 +606,9 @@ function updatePlayer(){
     if(p.y+p.size>=game.groundY){
         p.y=game.groundY-p.size;p.vy=0;p.onGround=true;p.rot*=.85;
     } else {
-        p.onGround=false;p.rot+=.12;
+        p.onGround=false;p.rot+=.15;
     }
 }
-
 function updateObs(){
     for(let i=game.obs.length-1;i>=0;i--){
         const o=game.obs[i];
@@ -629,7 +617,6 @@ function updateObs(){
         if(o.x+o.w<-100)game.obs.splice(i,1);
     }
 }
-
 function updateCoins(){
     for(let i=game.coinList.length-1;i>=0;i--){
         const c=game.coinList[i];
@@ -648,7 +635,6 @@ function updateCoins(){
         } else if(c.x<-100)game.coinList.splice(i,1);
     }
 }
-
 function updateParts(){
     for(let i=game.parts.length-1;i>=0;i--){
         const p=game.parts[i];
@@ -657,9 +643,9 @@ function updateParts(){
     }
 }
 
-// ============================================
-// SPAWN
-// ============================================
+// ============================================================
+// OBSTACLE PATTERNS — VARIED SHAPES
+// ============================================================
 function spawnPattern(lv){
     let pat=lv.patterns[Math.floor(Math.random()*lv.patterns.length)];
     if(lv.patterns.length>1){
@@ -672,26 +658,46 @@ function spawnPattern(lv){
     game.lastPat=pat;
     const x=W+40,gy=game.groundY;
 
-    if(pat==='single')game.obs.push({x,y:gy-42,w:42,h:42,type:'box'});
+    if(pat==='single'){
+        // Single box
+        game.obs.push({x,y:gy-45,w:45,h:45,type:'box'});
+    }
     else if(pat==='double'){
-        game.obs.push({x,y:gy-42,w:45,h:42,type:'box'});
-        game.obs.push({x:x+90,y:gy-42,w:45,h:42,type:'box'});
+        // Two boxes with gap
+        game.obs.push({x,y:gy-45,w:48,h:45,type:'box'});
+        game.obs.push({x:x+100,y:gy-45,w:48,h:45,type:'box'});
     }
-    else if(pat==='triangle')game.obs.push({x,y:gy-52,w:48,h:52,type:'tri'});
+    else if(pat==='triangle'){
+        // Triangle spike
+        game.obs.push({x,y:gy-58,w:52,h:58,type:'tri'});
+    }
     else if(pat==='stairs'){
-        game.obs.push({x,y:gy-38,w:40,h:38,type:'box'});
-        game.obs.push({x:x+70,y:gy-62,w:40,h:62,type:'box'});
-        game.obs.push({x:x+140,y:gy-88,w:40,h:88,type:'box'});
+        // Staircase (3 steps taller)
+        game.obs.push({x,y:gy-40,w:42,h:40,type:'box'});
+        game.obs.push({x:x+75,y:gy-68,w:42,h:68,type:'box'});
+        game.obs.push({x:x+150,y:gy-96,w:42,h:96,type:'box'});
     }
-    else if(pat==='wall')game.obs.push({x,y:gy-95,w:32,h:95,type:'box'});
+    else if(pat==='wall'){
+        // Tall wall
+        game.obs.push({x,y:gy-110,w:35,h:110,type:'box'});
+    }
     else if(pat==='floating'){
-        game.obs.push({x,y:gy-145,w:65,h:32,type:'box'});
-        game.obs.push({x:x+165,y:gy-42,w:42,h:42,type:'box'});
+        // Floating obstacle (in air) + ground obstacle
+        game.obs.push({x,y:gy-160,w:70,h:35,type:'box'});
+        game.obs.push({x:x+180,y:gy-45,w:45,h:45,type:'box'});
     }
     else if(pat==='combo'){
-        game.obs.push({x,y:gy-42,w:40,h:42,type:'box'});
-        game.obs.push({x:x+90,y:gy-48,w:42,h:48,type:'tri'});
-        game.obs.push({x:x+180,y:gy-42,w:40,h:42,type:'box'});
+        // Box + Triangle + Box
+        game.obs.push({x,y:gy-45,w:42,h:45,type:'box'});
+        game.obs.push({x:x+100,y:gy-55,w:48,h:55,type:'tri'});
+        game.obs.push({x:x+200,y:gy-45,w:42,h:45,type:'box'});
+    }
+    else if(pat==='zigzag'){
+        // Zigzag ground
+        game.obs.push({x,y:gy-40,w:40,h:40,type:'box'});
+        game.obs.push({x:x+70,y:gy-80,w:40,h:80,type:'box'});
+        game.obs.push({x:x+140,y:gy-40,w:40,h:40,type:'box'});
+        game.obs.push({x:x+210,y:gy-80,w:40,h:80,type:'box'});
     }
 }
 
@@ -700,17 +706,17 @@ function spawnCoin(){
     if(close)return;
     const y=game.groundY;
     const patterns=[
-        [{x:W+40,y:y-160}],
-        [{x:W+40,y:y-130},{x:W+90,y:y-130},{x:W+140,y:y-130}],
-        [{x:W+40,y:y-90},{x:W+80,y:y-160},{x:W+120,y:y-90}]
+        [{x:W+40,y:y-180}],
+        [{x:W+40,y:y-150},{x:W+90,y:y-150},{x:W+140,y:y-150}],
+        [{x:W+40,y:y-100},{x:W+80,y:y-180},{x:W+120,y:y-100}]
     ];
     const p=patterns[Math.floor(Math.random()*patterns.length)];
     p.forEach(pos=>game.coinList.push({x:pos.x,y:pos.y,size:30,bob:Math.random()*6}));
 }
 
-// ============================================
+// ============================================================
 // COLLISION
-// ============================================
+// ============================================================
 function hit(p,o){
     const px=p.x+6,py=p.y+6,ps=p.size-12;
     return px<o.x+o.w&&px+ps>o.x&&py<o.y+o.h&&py+ps>o.y;
@@ -721,9 +727,9 @@ function hitCoin(p,c){
     return Math.sqrt(dx*dx+dy*dy)<p.size/2+c.size/2;
 }
 
-// ============================================
+// ============================================================
 // JUMP
-// ============================================
+// ============================================================
 function jump(){
     if(!game.on||game.over||game.paused||game.won)return;
     if(game.player.onGround){
@@ -741,9 +747,9 @@ function jump(){
     }
 }
 
-// ============================================
+// ============================================================
 // STAGE / HUD
-// ============================================
+// ============================================================
 function onStageChange(lv){
     beep(500,.1);setTimeout(()=>beep(700,.1),100);setTimeout(()=>beep(900,.15),200);
     document.getElementById('nIc').textContent=lv.ic;
@@ -754,7 +760,6 @@ function onStageChange(lv){
     setTimeout(()=>n.classList.remove('on'),2000);
     updateHUD();
 }
-
 function updateHUD(){
     document.getElementById('hScore').textContent=game.score;
     document.getElementById('hCoins').textContent=game.coins;
@@ -763,9 +768,9 @@ function updateHUD(){
     document.getElementById('pFill').style.width=prog+'%';
 }
 
-// ============================================
+// ============================================================
 // RENDER
-// ============================================
+// ============================================================
 function render(){
     const t=getTheme();
 
@@ -775,7 +780,7 @@ function render(){
 
     cx.fillStyle='rgba(255,255,255,.22)';
     for(let i=0;i<50;i++){
-        const sx=(i*137+game.frame*.4)%W;
+        const sx=(i*137+game.frame*.5)%W;
         const sy=(i*89)%(H-150);
         cx.fillRect(sx,sy,2,2);
     }
@@ -858,7 +863,7 @@ function renderPlayer(){
     } else {
         const g=cx.createLinearGradient(-p.size/2,-p.size/2,p.size/2,p.size/2);
         if(c.rb){
-            const hue=(game.frame*3)%360;
+            const hue=(game.frame*4)%360;
             g.addColorStop(0,`hsl(${hue},100%,60%)`);
             g.addColorStop(1,`hsl(${(hue+60)%360},100%,50%)`);
         } else {
@@ -919,20 +924,10 @@ function drawFace(){
     else if(mouth==='neutral'){cx.beginPath();cx.moveTo(-4,6);cx.lineTo(4,6);cx.stroke()}
     else if(mouth==='sad'){cx.beginPath();cx.arc(0,10,4,1.2*Math.PI,1.8*Math.PI);cx.stroke()}
     else if(mouth==='open'){cx.beginPath();cx.arc(0,6,4,0,Math.PI*2);cx.fill()}
-    else if(mouth==='laugh'){
-        cx.beginPath();cx.arc(0,4,5,0,Math.PI);cx.fill();
-        cx.fillStyle='white';cx.fillRect(-2,4,4,2);
-    } else if(mouth==='tongue'){
-        cx.beginPath();cx.arc(0,4,4,.2*Math.PI,.8*Math.PI);cx.stroke();
-        cx.fillStyle='#ff3860';
-        cx.beginPath();cx.ellipse(0,8,2,3,0,0,Math.PI*2);cx.fill();
-    } else if(mouth==='kiss'){
-        cx.fillStyle='#ff3860';
-        cx.beginPath();cx.ellipse(0,6,3,2,0,0,Math.PI*2);cx.fill();
-    } else if(mouth==='fire'){
-        cx.fillStyle='#ff8c42';cx.font='8px serif';cx.textAlign='center';
-        cx.fillText('🔥',0,8);
-    }
+    else if(mouth==='laugh'){cx.beginPath();cx.arc(0,4,5,0,Math.PI);cx.fill();cx.fillStyle='white';cx.fillRect(-2,4,4,2)}
+    else if(mouth==='tongue'){cx.beginPath();cx.arc(0,4,4,.2*Math.PI,.8*Math.PI);cx.stroke();cx.fillStyle='#ff3860';cx.beginPath();cx.ellipse(0,8,2,3,0,0,Math.PI*2);cx.fill()}
+    else if(mouth==='kiss'){cx.fillStyle='#ff3860';cx.beginPath();cx.ellipse(0,6,3,2,0,0,Math.PI*2);cx.fill()}
+    else if(mouth==='fire'){cx.fillStyle='#ff8c42';cx.font='8px serif';cx.textAlign='center';cx.fillText('🔥',0,8)}
 }
 
 function rr(cx,x,y,w,h,r){
@@ -945,9 +940,9 @@ function rr(cx,x,y,w,h,r){
     cx.closePath();
 }
 
-// ============================================
+// ============================================================
 // GAME OVER / WIN
-// ============================================
+// ============================================================
 function gameOver(){
     game.over=true;game.on=false;
     beep(150,.4,'sawtooth',.1);
@@ -974,15 +969,14 @@ function levelComplete(){
     document.getElementById('wLvl').textContent=lv.num;
     document.getElementById('wScore').textContent=game.score;
     document.getElementById('wCoins').textContent=game.coins;
-    // Hide next button if last level
     document.getElementById('btnNext').style.display = game.lvlIdx < LEVELS.length-1 ? 'flex' : 'none';
     showHUD(false);
     showScreen('scrWin');
 }
 
-// ============================================
+// ============================================================
 // INPUT
-// ============================================
+// ============================================================
 addEventListener('keydown',e=>{
     if(e.code==='Space'||e.code==='ArrowUp'||e.code==='KeyW'){
         e.preventDefault();jump();
@@ -995,9 +989,9 @@ cv.addEventListener('touchstart',e=>{
     if(game.on&&!game.over&&!game.paused&&!game.won)jump();
 },{passive:false});
 
-// ============================================
+// ============================================================
 // INIT
-// ============================================
+// ============================================================
 updateMenu();
 </script>
 </body>
