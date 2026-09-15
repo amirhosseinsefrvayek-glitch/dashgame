@@ -340,7 +340,7 @@ const LEVELS = [
     { num:20, name:'FINAL BOSS',ic:'👹', speed:12.5, gap:55,  difficulty:'x', pool:['finalBoss','chaosPortal','laser','rapidSpike','multiSpike'] }
 ];
 
-const LEVEL_TARGET = 500;
+const LEVEL_TARGET = 1500;
 
 // ---------- CANVAS ----------
 const cv = document.getElementById('cv');
@@ -586,9 +586,10 @@ function loop(){
 
 function update(){
     game.frame++;
+    game.speed += 0.003;
 
     // Color changes every 25 points
-    const newColorIdx=Math.floor(game.score/25)%5;
+     const newColorIdx=Math.floor(game.score/50)%5;
     if(newColorIdx!==game.colorIdx)game.colorIdx=newColorIdx;
 
     const lv=getLvl();
